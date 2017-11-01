@@ -24,10 +24,10 @@ public class HtmlParser {
             String name = link.toString();
             String name2;
             if (name.indexOf("NIESTACJONARNE") != -1) {
-                name2 = name.substring(name.indexOf("\"") + 1);
-                return (name2.substring(0, name2.indexOf("xls") + 3));
+                name2 = name.substring(0, name.indexOf("xls")+3);
+                name2 = name2.substring(name2.lastIndexOf("/") + 1);
+                return name2;
             }
-
         }
         return null;
     }
