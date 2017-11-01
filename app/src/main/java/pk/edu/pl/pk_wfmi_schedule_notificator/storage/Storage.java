@@ -6,24 +6,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
+
+import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class Storage {
     private static final String PREFS_NAME = "STORAGE.tmp";
 
-    public void saveList(List<String> list) throws IOException {
+    public void saveTimetable(Timetable timetable) throws IOException {
         FileOutputStream fos = new FileOutputStream(PREFS_NAME);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(list);
+        oos.writeObject(timetable);
         oos.close();
     }
 
-    public List<String> readList() throws IOException, ClassNotFoundException {
+    public Timetable readTimetable() throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(PREFS_NAME);
         ObjectInputStream ois = new ObjectInputStream(fis);
-        List<String> list = (List<String>) ois.readObject();
+        Timetable timetable = (Timetable) ois.readObject();
         ois.close();
 
-        return list;
+        return timetable;
     }
 }
