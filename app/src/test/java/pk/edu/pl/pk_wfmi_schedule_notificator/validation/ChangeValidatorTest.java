@@ -1,11 +1,19 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.validation;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Date;
+
+import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class ChangeValidatorTest {
     @InjectMocks
@@ -19,27 +27,25 @@ public class ChangeValidatorTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    // Todo: fix test
-   /* @Test
+    @Test
     public void validate() throws Exception {
         // given
-        List<String> readList = new LinkedList<>(Arrays.asList("stary1.xls", "stary2.xls"));
-        when(storage.readTimetable()).thenReturn(readList);
+        Timetable readTimetable = new Timetable("file.xls", "http://pk.pl", new Date());
+        when(storage.readTimetable()).thenReturn(readTimetable);
+        Timetable fetchedTimetable = new Timetable("file.xls", "http://pk.pl", new Date());
 
-        List<String> newList = new LinkedList<>(Arrays.asList("stary1.xls", "nowy.xls"));
-
-        // when validate same lists
-        List<String> result = changeValidator.validate(readList);
-
-        // then
-        assertEquals(result.size(), 0);
-
-        // when new items appeared
-        result = changeValidator.validate(newList);
+        // when
+        boolean result = changeValidator.isNewerVersion(fetchedTimetable);
 
         // then
-        List<String> expected = Collections.singletonList("nowy.xls");
-        assertThat(result, CoreMatchers.is(expected));
-    }*/
+        assertFalse(result);
+
+        // when
+        fetchedTimetable.setFileName("file_2.xls");
+        result = changeValidator.isNewerVersion(fetchedTimetable);
+
+        // then
+        assertTrue(result);
+    }
 
 }
