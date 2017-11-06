@@ -9,6 +9,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
+import pk.edu.pl.pk_wfmi_schedule_notificator.manager.NotificationManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
 
 public class CurrentFilesActivity extends Activity {
@@ -26,5 +27,10 @@ public class CurrentFilesActivity extends Activity {
 
         HtmlParser htmlParser = new HtmlParser("http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php&nc", arrayAdapter);
         htmlParser.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        NotificationManager notificationManager = new NotificationManager(this);
+        notificationManager.startBackgroundService();
     }
+
+
 }
