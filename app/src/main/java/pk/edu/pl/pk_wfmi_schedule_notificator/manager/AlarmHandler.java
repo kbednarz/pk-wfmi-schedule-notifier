@@ -8,10 +8,10 @@ import android.content.Intent;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.receiver.AlarmReceiver;
 
-public class NotificationManager {
+public class AlarmHandler {
     private Context context;
 
-    public NotificationManager(Context context) {
+    public AlarmHandler(Context context) {
         this.context = context;
     }
 
