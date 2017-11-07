@@ -16,7 +16,7 @@ public class TimetableManager {
     }
 
     public Timetable fetchTimetable() throws Exception {
-        Timetable timetable = checkSite();
+        Timetable timetable = checkOnSite();
 
         if (hasChanged(timetable)) {
             storage.saveTimetable(timetable);
@@ -24,7 +24,13 @@ public class TimetableManager {
         return timetable;
     }
 
-    private Timetable checkSite() throws Exception {
+    public boolean hasNewerAppeared() throws Exception {
+        Timetable timetable = checkOnSite();
+
+        return hasChanged(timetable);
+    }
+
+    private Timetable checkOnSite() throws Exception {
         HtmlParser htmlParser = new HtmlParser();
 
         String fileName = htmlParser.fetchXlsFiles("http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php&nc");

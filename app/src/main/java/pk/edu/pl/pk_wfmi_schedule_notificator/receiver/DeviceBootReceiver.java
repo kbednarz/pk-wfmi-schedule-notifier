@@ -4,7 +4,6 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.NotificationManager;
 
@@ -17,7 +16,6 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = new NotificationManager(context);
             notificationManager.startBackgroundService();
 
-            Toast.makeText(context, "DeviceBootReceiver", Toast.LENGTH_SHORT).show();
         }
     }
 }
