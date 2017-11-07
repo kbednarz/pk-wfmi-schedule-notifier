@@ -1,5 +1,7 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.storage;
 
+import android.content.Context;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,13 +11,15 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
 
 
 public class StorageTest {
     @Test
     public void saveAndReadList() throws IOException, ClassNotFoundException {
         // Given
-        Storage storage = new Storage();
+        Context context = mock(Context.class);
+        Storage storage = new Storage(context);
         Timetable savedTimetable = new Timetable("file.xls","http://test", new Date());
 
         // When file not exists
