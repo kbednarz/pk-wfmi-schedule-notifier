@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.NotificationManager;
-import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
+import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
+import pk.edu.pl.pk_wfmi_schedule_notificator.validation.ChangeAsyncTask;
 
 public class CurrentFilesActivity extends Activity {
 
@@ -25,8 +26,10 @@ public class CurrentFilesActivity extends Activity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<String>());
         filesView.setAdapter(arrayAdapter);
 
-        HtmlParser htmlParser = new HtmlParser("http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php&nc", arrayAdapter);
-        htmlParser.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Storage storage = new Storage(this);
+
+        ChangeAsyncTask changeAsyncTask = new ChangeAsyncTask(storage, arrayAdapter);
+        changeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         NotificationManager notificationManager = new NotificationManager(this);
         notificationManager.startBackgroundService();
