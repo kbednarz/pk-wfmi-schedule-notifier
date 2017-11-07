@@ -17,10 +17,15 @@ public class AlarmHandler {
 
     public void startBackgroundService() {
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-        android.app.AlarmManager manager = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        manager.setInexactRepeating(android.app.AlarmManager.RTC, System.currentTimeMillis(),
-                AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+        boolean alarmUp = (PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE) != null);
+
+        if (!alarmUp) {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            manager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(),
+                    AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+        }
     }
 }
