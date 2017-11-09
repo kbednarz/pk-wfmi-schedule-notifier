@@ -24,10 +24,12 @@ public class TimetableManager {
         return timetable;
     }
 
-    public boolean hasNewerAppeared() throws Exception {
+    public Timetable takeNewerIfAppeared() throws Exception {
         Timetable timetable = checkOnSite();
 
-        return hasChanged(timetable);
+        if (hasChanged(timetable))
+            return timetable;
+        else return null;
     }
 
     private Timetable checkOnSite() throws Exception {

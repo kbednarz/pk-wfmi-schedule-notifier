@@ -1,61 +1,64 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.receiver;
 
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.R;
-import pk.edu.pl.pk_wfmi_schedule_notificator.activity.CurrentFilesActivity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
+import pk.edu.pl.pk_wfmi_schedule_notificator.service.ConnectivityJob;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
+import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
+    private Logger log = LoggerFactory.getLogger(AlarmReceiver.class);
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Storage storage = new Storage(context);
-        TimetableManager timetableManager = new TimetableManager(storage);
-        try {
-            if (timetableManager.hasNewerAppeared()) {
-                sendNotification(context);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        log.debug("Receiving alarm broadcast");
 
+        if (isOnline(context)) {
+            log.trace("Device is online. Checking timetable");
+            Storage storage = new Storage(context);
+            TimetableManager timetableManager = new TimetableManager(storage);
+            NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
+                    (timetableManager, context);
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            log.trace("Device is offline. Scheduling job");
+            scheduleJob(context);
+        }
     }
 
-    private void sendNotification(Context context) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, "channel_xd")
-                        .setSmallIcon(R.drawable.notification_small_icon)
-                        .setContentTitle("PK WFMI")
-                        .setContentText("New schedule appeared!");
+    public void scheduleJob(Context context) {
+        ComponentName serviceComponent = new ComponentName(context, ConnectivityJob.class);
+        JobInfo.Builder builder = new JobInfo.Builder(10, serviceComponent);
+        builder.setMinimumLatency(1000); // wait at least
+//        builder.setOverrideDeadline(3 * 1000); // maximum delay
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require unmetered network
+        //builder.setRequiresDeviceIdle(true); // device should be idle
+        //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+        JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(builder.build());
 
-        Intent resultIntent = new Intent(context, CurrentFilesActivity.class);
+        log.trace("Job scheduled");
+    }
 
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+    public boolean isOnline(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        int mNotificationId = 001;
-
-        NotificationManager mNotifyMgr =
-                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
 }
