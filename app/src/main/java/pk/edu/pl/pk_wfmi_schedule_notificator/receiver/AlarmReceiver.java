@@ -14,9 +14,7 @@ import android.os.AsyncTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.service.ConnectivityJob;
-import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -29,10 +27,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (isOnline(context)) {
             try {
                 log.trace("Device is online. Checking timetable");
-                Storage storage = new Storage(context);
-                TimetableManager timetableManager = new TimetableManager(storage);
-                NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
-                        (timetableManager, context);
+                NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask(context);
                 notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } catch (Exception e) {
                 log.error("AlarmReceiver exception occurred", e);

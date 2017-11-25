@@ -1,12 +1,15 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.validation;
 
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+
+import com.snappydb.SnappydbException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +18,28 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.activity.CurrentFilesActivity;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
+import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
     private Logger log = LoggerFactory.getLogger(NotificationAsyncTask.class);
 
+    private Storage storage;
     private TimetableManager timetableManager;
+
+    @SuppressLint("StaticFieldLeak")
     private Context context;
 
-    public NotificationAsyncTask(TimetableManager timetableManager, Context context) {
-        this.timetableManager = timetableManager;
+    public NotificationAsyncTask(Context context) throws SnappydbException {
         this.context = context;
+        storage = new Storage(context);
+        timetableManager = new TimetableManager(storage);
     }
 
     @Override
     protected Timetable doInBackground(Void... voids) {
-        log.debug("Service started");
+        log.debug("NotificationAsyncTask started");
         try {
             return timetableManager.fetchTimetable();
         } catch (Exception e) {
@@ -46,6 +54,9 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
             log.debug("New schedule appeared. Calling notification");
             sendNotification(context);
         }
+
+        closeStorage();
+
         log.debug("NotificationAsyncTask finished");
     }
 
@@ -76,5 +87,13 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    private void closeStorage() {
+        try {
+            storage.close();
+        } catch (SnappydbException e) {
+            log.error("Cannot close DB", e);
+        }
     }
 }
