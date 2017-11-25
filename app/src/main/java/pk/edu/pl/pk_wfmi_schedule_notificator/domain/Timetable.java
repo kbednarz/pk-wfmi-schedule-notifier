@@ -9,6 +9,12 @@ public class Timetable implements Serializable {
     private String url;
     private Date lastUpdate;
 
+    /**
+     * Empty constructor for Kryo 
+     */
+    public Timetable() {
+    }
+
     public Timetable(String fileName, String url, Date lastUpdate) {
         this.fileName = fileName;
         this.url = url;
