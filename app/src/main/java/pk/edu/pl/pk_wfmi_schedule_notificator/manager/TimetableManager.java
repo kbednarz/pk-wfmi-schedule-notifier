@@ -1,7 +1,8 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 
-import java.io.IOException;
+import com.snappydb.SnappydbException;
+
 import java.util.Date;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
@@ -10,6 +11,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
 
 public class TimetableManager {
     private Storage storage;
+    private boolean newAppeared = false;
 
     public TimetableManager(Storage storage) {
         this.storage = storage;
@@ -23,13 +25,17 @@ public class TimetableManager {
         }
         return timetable;
     }
+//
+//    public Timetable takeNewerIfAppeared() throws Exception {
+//        Timetable timetable = checkOnSite();
+//
+//        if (hasChanged(timetable))
+//            return timetable;
+//        else return null;
+//    }
 
-    public Timetable takeNewerIfAppeared() throws Exception {
-        Timetable timetable = checkOnSite();
-
-        if (hasChanged(timetable))
-            return timetable;
-        else return null;
+    public boolean isNewAppeared() {
+        return newAppeared;
     }
 
     private Timetable checkOnSite() throws Exception {
@@ -41,9 +47,11 @@ public class TimetableManager {
 
     }
 
-    private boolean hasChanged(Timetable itemToValidate) throws IOException, ClassNotFoundException {
+    private boolean hasChanged(Timetable itemToValidate) throws SnappydbException {
         Timetable oldItem = storage.readTimetable();
 
-        return oldItem == null || !itemToValidate.getFileName().equals(oldItem.getFileName());
+        newAppeared = oldItem == null || !itemToValidate.getFileName().equals(oldItem.getFileName());
+
+        return newAppeared;
     }
 }

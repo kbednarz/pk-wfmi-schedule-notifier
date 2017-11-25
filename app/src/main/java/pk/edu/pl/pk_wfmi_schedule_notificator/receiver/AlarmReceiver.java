@@ -27,19 +27,26 @@ public class AlarmReceiver extends BroadcastReceiver {
         log.debug("Receiving alarm broadcast");
 
         if (isOnline(context)) {
-            log.trace("Device is online. Checking timetable");
-            Storage storage = new Storage(context);
-            TimetableManager timetableManager = new TimetableManager(storage);
-            NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
-                    (timetableManager, context);
-            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            try {
+                log.trace("Device is online. Checking timetable");
+                Storage storage = new Storage(context);
+                TimetableManager timetableManager = new TimetableManager(storage);
+                NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
+                        (timetableManager, context);
+                notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } catch (Exception e) {
+                log.error("AlarmReceiver exception occurred", e);
+                scheduleJob(context);
+            }
         } else {
             log.trace("Device is offline. Scheduling job");
             scheduleJob(context);
         }
     }
 
-    public void scheduleJob(Context context) {
+    private void scheduleJob(Context context) {
+        log.trace("Scheduling job");
+
         ComponentName serviceComponent = new ComponentName(context, ConnectivityJob.class);
         JobInfo.Builder builder = new JobInfo.Builder(10, serviceComponent);
         builder.setMinimumLatency(1000); // wait at least
@@ -49,11 +56,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
-
-        log.trace("Job scheduled");
     }
 
-    public boolean isOnline(Context context) {
+    private boolean isOnline(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context
                 .CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getActiveNetworkInfo();

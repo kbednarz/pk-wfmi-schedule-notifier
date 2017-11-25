@@ -27,7 +27,7 @@ public class AlarmHandler {
         boolean alarmUp = (PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE) != null);
 
         if (!alarmUp) {
-            log.debug("Starting AlarmManager");
+            log.debug("Scheduling Alarm");
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

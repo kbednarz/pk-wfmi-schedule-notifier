@@ -19,13 +19,18 @@ public class ConnectivityJob extends JobService {
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         log.debug("Starting job");
-        Storage storage = new Storage(getApplicationContext());
-        TimetableManager timetableManager = new TimetableManager(storage);
+        try {
+            Storage storage = new Storage(getApplicationContext());
+            TimetableManager timetableManager = new TimetableManager(storage);
 
-        NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
-                (timetableManager, getApplicationContext());
-        notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        return true;
+            NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
+                    (timetableManager, getApplicationContext());
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return true;
+        } catch (Exception e){
+            log.error("ConnectivityJob error occurred",e);
+            return false; // todo: check meaning of this status
+        }
     }
 
     @Override

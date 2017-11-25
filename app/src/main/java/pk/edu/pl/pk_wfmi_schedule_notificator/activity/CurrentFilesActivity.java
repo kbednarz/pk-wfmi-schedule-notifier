@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
@@ -14,25 +17,30 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.ChangeAsyncTask;
 
 public class CurrentFilesActivity extends Activity {
+    private Logger log = LoggerFactory.getLogger(CurrentFilesActivity.class);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_current_files);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current_files);
+            ListView filesView = findViewById(R.id.filesView);
 
-        ListView filesView = findViewById(R.id.filesView);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<String>());
+            filesView.setAdapter(arrayAdapter);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<String>());
-        filesView.setAdapter(arrayAdapter);
+            Storage storage = new Storage(getApplicationContext());
 
-        Storage storage = new Storage(this);
+            ChangeAsyncTask changeAsyncTask = new ChangeAsyncTask(storage, arrayAdapter);
+            changeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        ChangeAsyncTask changeAsyncTask = new ChangeAsyncTask(storage, arrayAdapter);
-        changeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        AlarmHandler alarmHandler = new AlarmHandler(this);
-        alarmHandler.startBackgroundService();
+            AlarmHandler alarmHandler = new AlarmHandler(this);
+            alarmHandler.startBackgroundService();
+        } catch (Exception e) {
+            log.error("Exception in main activity", e);
+        }
     }
 
 
