@@ -3,56 +3,32 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.storage;
 
 import android.content.Context;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import com.snappydb.DB;
+import com.snappydb.DBFactory;
+import com.snappydb.SnappydbException;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class Storage {
-    protected final File storageFile;
+    protected DB db;
 
-    public Storage(Context context) {
-        storageFile = new File(context.getFilesDir(), "STORAGE.tmp");
+    public Storage(Context context) throws SnappydbException {
+        db = DBFactory.open(context);
     }
 
-    public void saveTimetable(Timetable timetable) throws IOException {
-        if (!storageFile.exists()) {
-            storageFile.createNewFile();
-        }
-
-
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            fos = new FileOutputStream(storageFile);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(timetable);
-        } finally {
-            if (oos != null) oos.close();
-            if (fos != null) fos.close();
-        }
-
+    public void close() throws SnappydbException {
+        db.close();
     }
 
-    public Timetable readTimetable() throws IOException, ClassNotFoundException {
-        if (storageFile.exists()) {
-            FileInputStream fis = null;
-            ObjectInputStream ois = null;
-            try {
-                fis = new FileInputStream(storageFile);
-                ois = new ObjectInputStream(fis);
+    public void destroy() throws SnappydbException {
+        db.destroy();
+    }
 
-                return (Timetable) ois.readObject();
-            } finally {
-                if (ois != null) ois.close();
-                if (fis != null) fis.close();
-            }
-        } else {
-            return null;
-        }
+    public void saveTimetable(Timetable timetable) throws SnappydbException {
+        db.put("timetable", timetable);
+    }
+
+    public Timetable readTimetable() throws SnappydbException {
+        return db.get("timetable", Timetable.class);
     }
 }
