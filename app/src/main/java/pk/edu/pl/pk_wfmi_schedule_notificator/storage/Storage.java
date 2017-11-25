@@ -7,9 +7,14 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class Storage {
+    private static final Logger logger = LoggerFactory.getLogger(Storage.class);
+
     protected DB db;
 
     public Storage(Context context) throws SnappydbException {
@@ -29,6 +34,8 @@ public class Storage {
     }
 
     public Timetable readTimetable() throws SnappydbException {
-        return db.get("timetable", Timetable.class);
+        if (db.exists("timetable"))
+            return db.get("timetable", Timetable.class);
+        else return null;
     }
 }

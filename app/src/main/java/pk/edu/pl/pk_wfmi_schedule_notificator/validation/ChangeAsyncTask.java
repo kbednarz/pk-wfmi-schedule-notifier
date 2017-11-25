@@ -10,10 +10,9 @@ import org.slf4j.LoggerFactory;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
-import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
 
 public class ChangeAsyncTask extends AsyncTask<Void, Void, Timetable> {
-    private static final Logger logger = LoggerFactory.getLogger(HtmlParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChangeAsyncTask.class);
     private ArrayAdapter<String> arrayAdapter;
     private TimetableManager timetableManager;
 
