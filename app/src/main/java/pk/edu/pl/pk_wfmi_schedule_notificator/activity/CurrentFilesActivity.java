@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
-import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmHandler;
+import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.ChangeAsyncTask;
 
@@ -39,8 +39,8 @@ public class CurrentFilesActivity extends Activity {
             ChangeAsyncTask changeAsyncTask = new ChangeAsyncTask(storage, arrayAdapter);
             changeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-            AlarmHandler alarmHandler = new AlarmHandler(getApplicationContext());
-            alarmHandler.startBackgroundService();
+            AlarmManager alarmManager = new AlarmManager(getApplicationContext());
+            alarmManager.startBackgroundService();
         } catch (Exception e) {
             log.error("Exception in main activity", e);
         }

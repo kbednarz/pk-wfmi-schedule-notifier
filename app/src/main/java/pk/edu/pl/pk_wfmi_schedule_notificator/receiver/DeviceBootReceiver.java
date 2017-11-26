@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmHandler;
+import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 
 public class DeviceBootReceiver extends BroadcastReceiver {
 
@@ -13,8 +13,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 
-            AlarmHandler alarmHandler = new AlarmHandler(context);
-            alarmHandler.startBackgroundService();
+            AlarmManager alarmManager = new AlarmManager(context);
+            alarmManager.startBackgroundService();
 
         }
     }

@@ -1,7 +1,6 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,12 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.receiver.AlarmReceiver;
 
-public class AlarmHandler {
-    private Logger log = LoggerFactory.getLogger(AlarmHandler.class);
+public class AlarmManager {
+    private Logger log = LoggerFactory.getLogger(AlarmManager.class);
 
     private Context context;
 
-    public AlarmHandler(Context context) {
+    public AlarmManager(Context context) {
         this.context = context;
     }
 
@@ -29,10 +28,10 @@ public class AlarmHandler {
         if (!alarmUp) {
             log.debug("Scheduling Alarm");
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            android.app.AlarmManager manager = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            manager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(),
-                    AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+            manager.setInexactRepeating(android.app.AlarmManager.RTC, System.currentTimeMillis(),
+                    android.app.AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
         } else {
             log.debug("Alarm is already up");
         }
