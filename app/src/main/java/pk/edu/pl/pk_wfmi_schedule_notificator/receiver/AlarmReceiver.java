@@ -14,7 +14,7 @@ import android.os.AsyncTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.service.ConnectivityJob;
+import pk.edu.pl.pk_wfmi_schedule_notificator.job.NotificationJob;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -42,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void scheduleJob(Context context) {
         log.trace("Scheduling job");
 
-        ComponentName serviceComponent = new ComponentName(context, ConnectivityJob.class);
+        ComponentName serviceComponent = new ComponentName(context, NotificationJob.class);
         JobInfo.Builder builder = new JobInfo.Builder(10, serviceComponent);
         builder.setMinimumLatency(1000); // wait at least
 //        builder.setOverrideDeadline(3 * 1000); // maximum delay

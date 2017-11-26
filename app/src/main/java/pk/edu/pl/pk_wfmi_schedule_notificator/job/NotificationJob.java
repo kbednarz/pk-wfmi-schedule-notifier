@@ -1,4 +1,4 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.service;
+package pk.edu.pl.pk_wfmi_schedule_notificator.job;
 
 
 import android.app.job.JobParameters;
@@ -11,19 +11,19 @@ import org.slf4j.LoggerFactory;
 import pk.edu.pl.pk_wfmi_schedule_notificator.receiver.AlarmReceiver;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
 
-public class ConnectivityJob extends JobService {
+public class NotificationJob extends JobService {
     private Logger log = LoggerFactory.getLogger(AlarmReceiver.class);
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        log.debug("Starting ConnectivityJob");
+        log.debug("Starting NotificationJob");
         try {
             NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
                     (getApplicationContext());
             notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         } catch (Exception e) {
-            log.error("ConnectivityJob error occurred", e);
+            log.error("NotificationJob error occurred", e);
             return false; // todo: check meaning of this status
         }
     }

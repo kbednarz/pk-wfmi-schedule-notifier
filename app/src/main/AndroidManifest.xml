@@ -37,7 +37,7 @@
         </receiver>
 
         <service
-            android:name=".service.ConnectivityJob"
+            android:name=".job.NotificationJob"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
