@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
-import pk.edu.pl.pk_wfmi_schedule_notificator.activity.CurrentFilesActivity;
+import pk.edu.pl.pk_wfmi_schedule_notificator.activity.FileListActivity;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
@@ -69,7 +69,7 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
                         .setContentTitle("PK WFMI")
                         .setContentText("New schedule appeared!");
 
-        Intent resultIntent = new Intent(context, CurrentFilesActivity.class);
+        Intent resultIntent = new Intent(context, FileListActivity.class);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(

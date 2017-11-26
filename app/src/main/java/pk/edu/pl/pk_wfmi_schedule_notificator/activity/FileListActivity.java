@@ -18,8 +18,8 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.ChangeAsyncTask;
 
-public class CurrentFilesActivity extends Activity {
-    private Logger log = LoggerFactory.getLogger(CurrentFilesActivity.class);
+public class FileListActivity extends Activity {
+    private Logger log = LoggerFactory.getLogger(FileListActivity.class);
 
     private Storage storage;
 
