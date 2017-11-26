@@ -8,9 +8,7 @@ import android.os.AsyncTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.receiver.AlarmReceiver;
-import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
 
 public class ConnectivityJob extends JobService {
@@ -18,17 +16,14 @@ public class ConnectivityJob extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        log.debug("Starting job");
+        log.debug("Starting ConnectivityJob");
         try {
-            Storage storage = new Storage(getApplicationContext());
-            TimetableManager timetableManager = new TimetableManager(storage);
-
             NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask
-                    (timetableManager, getApplicationContext());
+                    (getApplicationContext());
             notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
-        } catch (Exception e){
-            log.error("ConnectivityJob error occurred",e);
+        } catch (Exception e) {
+            log.error("ConnectivityJob error occurred", e);
             return false; // todo: check meaning of this status
         }
     }
