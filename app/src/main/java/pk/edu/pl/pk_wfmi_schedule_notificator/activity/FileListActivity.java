@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
-import pk.edu.pl.pk_wfmi_schedule_notificator.validation.ChangeAsyncTask;
 
 public class FileListActivity extends Activity {
     private Logger log = LoggerFactory.getLogger(FileListActivity.class);
@@ -36,8 +35,8 @@ public class FileListActivity extends Activity {
 
             storage = new Storage(getApplicationContext());
 
-            ChangeAsyncTask changeAsyncTask = new ChangeAsyncTask(storage, arrayAdapter);
-            changeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, arrayAdapter);
+            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             AlarmManager alarmManager = new AlarmManager(getApplicationContext());
             alarmManager.startBackgroundService();

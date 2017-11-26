@@ -1,4 +1,4 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.validation;
+package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
 
 
 import android.os.AsyncTask;
@@ -11,13 +11,13 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
-public class ChangeAsyncTask extends AsyncTask<Void, Void, Timetable> {
-    private static final Logger logger = LoggerFactory.getLogger(ChangeAsyncTask.class);
+public class UpdateFileAsyncTask extends AsyncTask<Void, Void, Timetable> {
+    private static final Logger logger = LoggerFactory.getLogger(UpdateFileAsyncTask.class);
     private ArrayAdapter<String> arrayAdapter;
     private TimetableManager timetableManager;
 
 
-    public ChangeAsyncTask(Storage storage, ArrayAdapter<String> arrayAdapter) {
+    public UpdateFileAsyncTask(Storage storage, ArrayAdapter<String> arrayAdapter) {
         this.arrayAdapter = arrayAdapter;
         timetableManager = new TimetableManager(storage);
     }
