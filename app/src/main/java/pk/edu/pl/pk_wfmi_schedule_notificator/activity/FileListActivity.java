@@ -27,7 +27,7 @@ public class FileListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_current_files);
+            setContentView(R.layout.activity_list_files);
 
             ListView filesView = findViewById(R.id.filesView);
 
