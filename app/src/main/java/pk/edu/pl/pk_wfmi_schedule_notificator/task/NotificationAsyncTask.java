@@ -1,4 +1,4 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.validation;
+package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
 import android.annotation.SuppressLint;

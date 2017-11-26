@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.receiver.AlarmReceiver;
-import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
+import pk.edu.pl.pk_wfmi_schedule_notificator.task.NotificationAsyncTask;
 
 public class NotificationJob extends JobService {
     private Logger log = LoggerFactory.getLogger(AlarmReceiver.class);

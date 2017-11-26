@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.job.NotificationJob;
-import pk.edu.pl.pk_wfmi_schedule_notificator.validation.NotificationAsyncTask;
+import pk.edu.pl.pk_wfmi_schedule_notificator.task.NotificationAsyncTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private Logger log = LoggerFactory.getLogger(AlarmReceiver.class);
