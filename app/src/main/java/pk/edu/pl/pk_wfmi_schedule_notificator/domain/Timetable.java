@@ -74,4 +74,9 @@ public class Timetable implements Serializable {
         result = 31 * result + lastUpdate.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return fileName;
+    }
 }

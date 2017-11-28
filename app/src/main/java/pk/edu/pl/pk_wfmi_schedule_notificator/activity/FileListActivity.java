@@ -1,8 +1,12 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
+import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
@@ -31,8 +36,20 @@ public class FileListActivity extends Activity {
 
             ListView filesView = findViewById(R.id.filesView);
 
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<String>());
+            ArrayAdapter<Timetable> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<Timetable>());
             filesView.setAdapter(arrayAdapter);
+            filesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Timetable timetable = (Timetable) adapterView.getAdapter().getItem(i);
+
+                    Intent openXlsIntent = new Intent(Intent.ACTION_VIEW);
+                    openXlsIntent.setData(Uri.parse(timetable.getUrl()));
+
+                    startActivity(openXlsIntent);
+                    return false;
+                }
+            });
 
             storage = new Storage(getApplicationContext());
 
