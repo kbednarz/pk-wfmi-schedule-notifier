@@ -8,17 +8,27 @@ public class Timetable implements Serializable {
     private String fileName;
     private String url;
     private Date lastUpdate;
+    private byte[] file;
 
     /**
-     * Empty constructor for Kryo 
+     * Empty constructor for Kryo
      */
     public Timetable() {
     }
 
-    public Timetable(String fileName, String url, Date lastUpdate) {
+    public Timetable(String fileName, String url, Date lastUpdate, byte[] file) {
         this.fileName = fileName;
         this.url = url;
         this.lastUpdate = lastUpdate;
+        this.file = file;
+    }
+
+    public byte[] getFile() {
+        return file;
+    }
+
+    public void setFile(byte[] file) {
+        this.file = file;
     }
 
     public String getFileName() {

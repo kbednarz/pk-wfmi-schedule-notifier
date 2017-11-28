@@ -1,20 +1,19 @@
-//package pk.edu.pl.pk_wfmi_schedule_notificator.web;
-//
-//import org.junit.Test;
-//
-//import java.io.IOException;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertNotNull;
-//
-//public class HtmlParserTest {
-//    @Test
-//    public void fetchXlsFilesTest() throws IOException {
-//        HtmlParser htmlParser = new HtmlParser();
-//
-//        String result = htmlParser.fetchXlsFiles("");
-//
-//        assertNotNull(result);
-//        assertEquals("Kopia NIESTACJONARNE_2017_10_19-2.xls", result);
-//    }
-//}
+package pk.edu.pl.pk_wfmi_schedule_notificator.web;
+
+import org.junit.Test;
+
+import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
+
+import static org.junit.Assert.assertNotNull;
+
+public class HtmlParserTest {
+    @Test
+    public void fetchXlsFilesTest() throws Exception {
+        HtmlParser htmlParser = new HtmlParser("http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php&nc");
+
+        Timetable result = htmlParser.fetchTimetable();
+
+        assertNotNull(result);
+    }
+
+}
