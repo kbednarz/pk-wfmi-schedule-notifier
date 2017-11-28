@@ -44,7 +44,6 @@ public class HtmlParser {
         timetable.setFileName(getFilename(link.toString()));
         timetable.setLastUpdate(new Date());
         timetable.setUrl(url);
-        timetable.setFile(downloadFile(url));
 
         return timetable;
     }
