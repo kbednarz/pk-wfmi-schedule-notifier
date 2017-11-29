@@ -11,6 +11,7 @@ import com.snappydb.SnappydbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Queue;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
@@ -35,13 +36,19 @@ public class Storage {
     public void saveTimetable(Queue<Timetable> timetable) throws SnappydbException {
         logger.trace("Saving timetables");
 
-        db.put("timetable", timetable);
+        db.put("timetable", timetable.toArray());
     }
 
     public Queue<Timetable> readTimetable() throws SnappydbException {
         logger.trace("Reading timetables");
 
-        if (db.exists("timetable")) return db.getObject("timetable", EvictingQueue.class);
-        else return EvictingQueue.create(5);
+        Queue<Timetable> timetableQueue = EvictingQueue.create(5);
+
+        if (db.exists("timetable")) {
+            Timetable[] timetableArray = db.getObjectArray("timetable", Timetable.class);
+            timetableQueue.addAll(Arrays.asList(timetableArray));
+        }
+
+        return timetableQueue;
     }
 }
