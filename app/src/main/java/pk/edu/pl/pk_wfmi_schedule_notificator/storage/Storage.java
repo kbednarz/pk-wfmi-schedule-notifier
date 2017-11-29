@@ -41,8 +41,7 @@ public class Storage {
     public Queue<Timetable> readTimetable() throws SnappydbException {
         logger.trace("Reading timetables");
 
-        if (db.exists("timetable"))
-            return db.get("timetable", EvictingQueue.class);
+        if (db.exists("timetable")) return db.getObject("timetable", EvictingQueue.class);
         else return EvictingQueue.create(5);
     }
 }
