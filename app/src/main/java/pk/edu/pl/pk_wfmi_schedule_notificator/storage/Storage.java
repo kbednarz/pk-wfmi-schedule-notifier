@@ -3,12 +3,15 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.storage;
 
 import android.content.Context;
 
+import com.google.common.collect.EvictingQueue;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Queue;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
@@ -29,13 +32,17 @@ public class Storage {
         db.destroy();
     }
 
-    public void saveTimetable(Timetable timetable) throws SnappydbException {
+    public void saveTimetable(Queue<Timetable> timetable) throws SnappydbException {
+        logger.trace("Saving timetables");
+
         db.put("timetable", timetable);
     }
 
-    public Timetable readTimetable() throws SnappydbException {
+    public Queue<Timetable> readTimetable() throws SnappydbException {
+        logger.trace("Reading timetables");
+
         if (db.exists("timetable"))
-            return db.get("timetable", Timetable.class);
-        else return null;
+            return db.get("timetable", EvictingQueue.class);
+        else return EvictingQueue.create(5);
     }
 }
