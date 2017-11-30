@@ -43,16 +43,16 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Queue<Timetable
     protected Queue<Timetable> doInBackground(Void... voids) {
         log.debug("NotificationAsyncTask started");
         try {
-            return timetableManager.fetchTimetable();
+            return timetableManager.fetchNewest();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("NotificationAsyncTask error occurred", e);
             return null;
         }
     }
 
     @Override
     protected void onPostExecute(Queue<Timetable> timetable) {
-        if (timetableManager.isNewAppeared()) {
+        if (timetable != null) {
             log.debug("New schedule appeared. Calling notification");
             sendNotification(context);
         }

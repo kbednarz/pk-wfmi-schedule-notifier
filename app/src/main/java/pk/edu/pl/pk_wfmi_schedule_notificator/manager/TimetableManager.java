@@ -2,7 +2,6 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 
 import com.google.common.collect.Iterables;
-import com.snappydb.SnappydbException;
 
 import java.util.Queue;
 
@@ -12,25 +11,22 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
 
 public class TimetableManager {
     private Storage storage;
-    private boolean newAppeared = false;
-    private Queue<Timetable> timetables;
 
     public TimetableManager(Storage storage) {
         this.storage = storage;
     }
 
-    public Queue<Timetable> fetchTimetable() throws Exception {
-        Timetable timetable = checkOnSite();
+    public Queue<Timetable> fetchNewest() throws Exception {
+        Queue<Timetable> timetables = storage.readTimetableQueue();
+        Timetable fetchedTimetable = checkOnSite();
 
-        if (hasChanged(timetable)) {
-            timetables.add(timetable);
-            storage.saveTimetable(timetables);
+        if (hasChanged(timetables, fetchedTimetable)) {
+            timetables.add(fetchedTimetable);
+            storage.saveTimetableQueue(timetables);
+
+            return timetables;
         }
-        return timetables;
-    }
-
-    public boolean isNewAppeared() {
-        return newAppeared;
+        return null;
     }
 
     private Timetable checkOnSite() throws Exception {
@@ -38,12 +34,8 @@ public class TimetableManager {
         return htmlParser.fetchTimetable();
     }
 
-    private boolean hasChanged(Timetable timetableToValidate) throws SnappydbException {
-        timetables = storage.readTimetable();
-
+    private boolean hasChanged(Queue<Timetable> timetables, Timetable timetableToValidate) {
         Timetable lastTimetable = Iterables.getLast(timetables, null);
-        newAppeared = lastTimetable == null || !timetableToValidate.getFileName().equals(lastTimetable.getFileName());
-
-        return newAppeared;
+        return lastTimetable == null || !timetableToValidate.getFileName().equals(lastTimetable.getFileName());
     }
 }

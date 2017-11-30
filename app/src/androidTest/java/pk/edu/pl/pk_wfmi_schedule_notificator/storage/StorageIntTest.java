@@ -43,20 +43,20 @@ public class StorageIntTest {
         }
 
         // when read timetable when none is saved
-        Queue<Timetable> readTimetableQueue = storage.readTimetable();
+        Queue<Timetable> readTimetableQueue = storage.readTimetableQueue();
 
         // then should return empty array
         assertNotNull(readTimetableQueue);
         assertEquals(0, readTimetableQueue.size());
 
         // when save timetable
-        storage.saveTimetable(timetableQueue);
+        storage.saveTimetableQueue(timetableQueue);
 
         // then
         assertEquals(1, storage.db.countKeys("timetable"));
 
         // when read just saved timetables
-        readTimetableQueue = storage.readTimetable();
+        readTimetableQueue = storage.readTimetableQueue();
 
         // then
         assertArrayEquals(timetableQueue.toArray(), readTimetableQueue.toArray());

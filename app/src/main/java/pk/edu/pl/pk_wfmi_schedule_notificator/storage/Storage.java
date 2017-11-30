@@ -33,13 +33,13 @@ public class Storage {
         db.destroy();
     }
 
-    public void saveTimetable(Queue<Timetable> timetable) throws SnappydbException {
+    public void saveTimetableQueue(Queue<Timetable> timetable) throws SnappydbException {
         logger.trace("Saving timetables");
 
         db.put("timetable", timetable.toArray());
     }
 
-    public Queue<Timetable> readTimetable() throws SnappydbException {
+    public Queue<Timetable> readTimetableQueue() throws SnappydbException {
         logger.trace("Reading timetables");
 
         Queue<Timetable> timetableQueue = EvictingQueue.create(5);

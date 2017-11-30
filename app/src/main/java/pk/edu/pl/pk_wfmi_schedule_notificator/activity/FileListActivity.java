@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.snappydb.SnappydbException;
@@ -35,27 +34,17 @@ public class FileListActivity extends Activity {
             setContentView(R.layout.activity_list_files);
 
             ListView filesView = findViewById(R.id.filesView);
-
-            ArrayAdapter<Timetable> arrayAdapter = new ArrayAdapter<>(this, R.layout.listview_row, new ArrayList<Timetable>());
-            filesView.setAdapter(arrayAdapter);
-            filesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Timetable timetable = (Timetable) adapterView.getAdapter().getItem(i);
-
-                    Intent openXlsIntent = new Intent(Intent.ACTION_VIEW);
-                    openXlsIntent.setData(Uri.parse(timetable.getUrl()));
-
-                    startActivity(openXlsIntent);
-                    return false;
-                }
-            });
+            FilesAdapter<Timetable> filesAdapter = prepareAdapter(filesView);
 
             storage = new Storage(getApplicationContext());
+            // update view with values from db
+            filesAdapter.update(storage.readTimetableQueue());
 
-            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, arrayAdapter);
+            // check updates
+            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, filesAdapter);
             updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+            // schedule next checks
             AlarmManager alarmManager = new AlarmManager(getApplicationContext());
             alarmManager.startBackgroundService();
         } catch (Exception e) {
@@ -71,5 +60,24 @@ public class FileListActivity extends Activity {
         } catch (SnappydbException e) {
             log.error("Cannot close DB", e);
         }
+    }
+
+    private FilesAdapter<Timetable> prepareAdapter(ListView filesView) {
+        FilesAdapter<Timetable> filesAdapter = new FilesAdapter<>(this, R.layout.listview_row, new ArrayList<Timetable>());
+        filesView.setAdapter(filesAdapter);
+        filesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Timetable timetable = (Timetable) adapterView.getAdapter().getItem(i);
+
+                Intent openXlsIntent = new Intent(Intent.ACTION_VIEW);
+                openXlsIntent.setData(Uri.parse(timetable.getUrl()));
+
+                startActivity(openXlsIntent);
+                return false;
+            }
+        });
+
+        return filesAdapter;
     }
 }
