@@ -1,6 +1,8 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -65,15 +67,30 @@ public class FileListActivity extends Activity {
     private FilesAdapter<Timetable> prepareAdapter(ListView filesView) {
         FilesAdapter<Timetable> filesAdapter = new FilesAdapter<>(this, R.layout.listview_row, new ArrayList<Timetable>());
         filesView.setAdapter(filesAdapter);
+
         filesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Timetable timetable = (Timetable) adapterView.getAdapter().getItem(i);
+                final Timetable timetable = (Timetable) adapterView.getAdapter().getItem(i);
 
-                Intent openXlsIntent = new Intent(Intent.ACTION_VIEW);
-                openXlsIntent.setData(Uri.parse(timetable.getUrl()));
+                // show alert
+                CharSequence[] items = {"Open URL"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(FileListActivity.this);
 
-                startActivity(openXlsIntent);
+                builder.setTitle(timetable.getFileName());
+                builder.setCancelable(true);
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        // open file
+                        Intent openXlsIntent = new Intent(Intent.ACTION_VIEW);
+                        openXlsIntent.setData(Uri.parse(timetable.getUrl()));
+                        startActivity(openXlsIntent);
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
                 return false;
             }
         });
