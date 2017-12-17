@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.Stack;
 
 
 public class FilesAdapter<T> extends ArrayAdapter<T> {
@@ -15,9 +16,14 @@ public class FilesAdapter<T> extends ArrayAdapter<T> {
 
     public void update(Queue<T> ts) {
         clear();
+        Stack<T> stack = new Stack<>();
 
         for (T t : ts) {
-            add(t);
+            stack.push(t);
+        }
+
+        for (T t : ts) {
+            add(stack.pop());
         }
 
         notifyDataSetChanged();
