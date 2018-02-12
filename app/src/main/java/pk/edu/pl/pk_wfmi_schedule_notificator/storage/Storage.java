@@ -11,7 +11,9 @@ import com.snappydb.SnappydbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
@@ -31,6 +33,17 @@ public class Storage {
 
     public void destroy() throws SnappydbException {
         db.destroy();
+    }
+
+    public List<Timetable> readTimetable() throws SnappydbException {
+        List<Timetable> timetables = new ArrayList<>();
+
+        if (db.exists("timetable")) {
+            Timetable[] array = db.getObjectArray("timetable", Timetable.class);
+            timetables = Arrays.asList(array);
+        }
+
+        return timetables;
     }
 
     public void saveTimetableQueue(Queue<Timetable> timetable) throws SnappydbException {

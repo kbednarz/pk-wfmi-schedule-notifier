@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,12 +25,13 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
-import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
 
 public class FileListActivity extends Activity {
     private Logger log = LoggerFactory.getLogger(FileListActivity.class);
 
     private Storage storage;
+    private RecyclerView recyclerView;
+    private ScheduleAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +39,20 @@ public class FileListActivity extends Activity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_list_files);
 
-            ListView filesView = findViewById(R.id.filesView);
-            FilesAdapter<Timetable> filesAdapter = prepareAdapter(filesView);
-
             storage = new Storage(getApplicationContext());
-            // update view with values from db
-            filesAdapter.update(storage.readTimetableQueue());
+
+            recyclerView = findViewById(R.id.recycler_view);
+            adapter = new ScheduleAdapter(storage.readTimetable());
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
 
             // check updates
-            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, filesAdapter);
-            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, filesAdapter);
+//            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             // schedule next checks
             AlarmManager alarmManager = new AlarmManager(getApplicationContext());
