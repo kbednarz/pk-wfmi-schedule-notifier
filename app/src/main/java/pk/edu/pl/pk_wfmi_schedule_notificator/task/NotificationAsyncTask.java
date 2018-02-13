@@ -14,7 +14,7 @@ import com.snappydb.SnappydbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Queue;
+import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.activity.FileListActivity;
@@ -24,7 +24,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class NotificationAsyncTask extends AsyncTask<Void, Void, Queue<Timetable>> {
+public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
     private Logger log = LoggerFactory.getLogger(NotificationAsyncTask.class);
 
     private Storage storage;
@@ -40,7 +40,7 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Queue<Timetable
     }
 
     @Override
-    protected Queue<Timetable> doInBackground(Void... voids) {
+    protected List<Timetable> doInBackground(Void... voids) {
         log.debug("NotificationAsyncTask started");
         try {
             return timetableManager.fetchNewest();
@@ -51,7 +51,7 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Queue<Timetable
     }
 
     @Override
-    protected void onPostExecute(Queue<Timetable> timetable) {
+    protected void onPostExecute(List<Timetable> timetable) {
         if (timetable != null) {
             log.debug("New schedule appeared. Calling notification");
             sendNotification(context);

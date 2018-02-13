@@ -3,7 +3,7 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 import com.google.common.collect.Iterables;
 
-import java.util.Queue;
+import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
@@ -16,13 +16,13 @@ public class TimetableManager {
         this.storage = storage;
     }
 
-    public Queue<Timetable> fetchNewest() throws Exception {
-        Queue<Timetable> timetables = storage.readTimetableQueue();
+    public List<Timetable> fetchNewest() throws Exception {
+        List<Timetable> timetables = storage.readTimetable();
         Timetable fetchedTimetable = checkOnSite();
 
         if (hasChanged(timetables, fetchedTimetable)) {
             timetables.add(fetchedTimetable);
-            storage.saveTimetableQueue(timetables);
+            storage.saveTimetable(timetables);
 
             return timetables;
         }
@@ -34,7 +34,7 @@ public class TimetableManager {
         return htmlParser.fetchTimetable();
     }
 
-    private boolean hasChanged(Queue<Timetable> timetables, Timetable timetableToValidate) {
+    private boolean hasChanged(List<Timetable> timetables, Timetable timetableToValidate) {
         Timetable lastTimetable = Iterables.getLast(timetables, null);
         return lastTimetable == null || !timetableToValidate.getFileName().equals(lastTimetable.getFileName());
     }
