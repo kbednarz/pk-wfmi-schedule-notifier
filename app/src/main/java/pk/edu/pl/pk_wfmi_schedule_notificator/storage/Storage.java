@@ -38,7 +38,7 @@ public class Storage {
 
         if (db.exists("timetable")) {
             Timetable[] array = db.getObjectArray("timetable", Timetable.class);
-            timetables = Arrays.asList(array);
+            timetables = new ArrayList<>(Arrays.asList(array));
         } else {
             logger.trace("Storage is empty");
         }

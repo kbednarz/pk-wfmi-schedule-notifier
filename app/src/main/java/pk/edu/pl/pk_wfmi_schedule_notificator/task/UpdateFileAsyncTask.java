@@ -8,18 +8,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import pk.edu.pl.pk_wfmi_schedule_notificator.activity.ScheduleAdapter;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
     private static final Logger logger = LoggerFactory.getLogger(UpdateFileAsyncTask.class);
-    private List<Timetable> timetables;
+    private ScheduleAdapter adapter;
     private TimetableManager timetableManager;
 
 
-    public UpdateFileAsyncTask(Storage storage, List<Timetable> timetables) {
-        this.timetables = timetables;
+    public UpdateFileAsyncTask(Storage storage, ScheduleAdapter adapter) {
+        this.adapter = adapter;
         timetableManager = new TimetableManager(storage);
     }
 
@@ -38,8 +39,7 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
         super.onPostExecute(timetables);
         if (timetables != null) {
             logger.debug("Updating current timetable list");
-            this.timetables.clear();
-            this.timetables.addAll(timetables);
+            adapter.setTimetables(timetables);
         }
     }
 }

@@ -46,4 +46,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             title = view.findViewById(R.id.row);
         }
     }
+
+    public void setTimetables(List<Timetable> timetables) {
+        this.timetables = timetables;
+        notifyDataSetChanged();
+    }
+
 }

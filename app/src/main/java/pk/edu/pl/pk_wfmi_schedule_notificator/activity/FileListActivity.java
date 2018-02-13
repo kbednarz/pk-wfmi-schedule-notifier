@@ -41,14 +41,15 @@ public class FileListActivity extends Activity {
             recyclerView = findViewById(R.id.recycler_view);
             adapter = new ScheduleAdapter(timetables);
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
+            manager.setReverseLayout(true);
+            recyclerView.setLayoutManager(manager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-
             // check updates
-            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, timetables);
+            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter);
             updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             // schedule next checks
