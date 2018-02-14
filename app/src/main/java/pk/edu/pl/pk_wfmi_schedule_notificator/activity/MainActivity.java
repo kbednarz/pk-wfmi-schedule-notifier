@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.fragment.NavigationDrawerFragment;
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
+import pk.edu.pl.pk_wfmi_schedule_notificator.fragment.TimetableFragment;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -47,7 +48,7 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, new TimetableFragment())
                 .commit();
     }
 
