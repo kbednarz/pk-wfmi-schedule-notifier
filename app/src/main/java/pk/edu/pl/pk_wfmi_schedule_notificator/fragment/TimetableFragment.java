@@ -44,6 +44,7 @@ public class TimetableFragment extends Fragment {
 
             LinearLayoutManager manager = new LinearLayoutManager(getActivity());
             manager.setReverseLayout(true);
+            manager.setStackFromEnd(true);
             recyclerView.setLayoutManager(manager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
