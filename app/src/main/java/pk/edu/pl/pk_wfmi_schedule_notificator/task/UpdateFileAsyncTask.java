@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.activity.ScheduleAdapter;
+import pk.edu.pl.pk_wfmi_schedule_notificator.adapter.ScheduleAdapter;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;

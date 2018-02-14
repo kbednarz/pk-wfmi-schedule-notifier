@@ -20,41 +20,27 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
-import pk.edu.pl.pk_wfmi_schedule_notificator.activity.FileListActivity;
-import pk.edu.pl.pk_wfmi_schedule_notificator.activity.ScheduleAdapter;
+import pk.edu.pl.pk_wfmi_schedule_notificator.adapter.ScheduleAdapter;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
 
 public class TimetableFragment extends Fragment {
-    private Logger log = LoggerFactory.getLogger(FileListActivity.class);
-
+    private static Logger log = LoggerFactory.getLogger(TimetableFragment.class);
     private Storage storage;
-    private RecyclerView recyclerView;
-    private ScheduleAdapter adapter;
-    private List<Timetable> timetables;
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        View rootView = inflater.inflate(R.layout.activity_list_files, container, false);
-//
-//        return rootView;
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = null;
         try {
-            // super.onCreate(savedInstanceState);
-//            getActivity().setContentView(R.layout.activity_list_files);
-            View view = inflater.inflate(R.layout.activity_list_files, container, false);
+            view = inflater.inflate(R.layout.activity_list_files, container, false);
 
             storage = new Storage(getActivity());
-            timetables = storage.readTimetable();
+            List<Timetable> timetables = storage.readTimetable();
 
-            recyclerView = view.findViewById(R.id.recycler_view);
-            adapter = new ScheduleAdapter(timetables);
+            RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+            ScheduleAdapter adapter = new ScheduleAdapter(timetables);
 
             LinearLayoutManager manager = new LinearLayoutManager(getActivity());
             manager.setReverseLayout(true);
@@ -63,25 +49,26 @@ public class TimetableFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
-            // check updates
-            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter);
-            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-            // schedule next checks
-            AlarmManager alarmManager = new AlarmManager(getActivity());
-            alarmManager.startBackgroundService();
-
-            return view;
+            scheduleJobs(adapter);
         } catch (Exception e) {
             log.error("Exception in Timetable fragment", e);
-            return null;
         }
+        return view;
+    }
 
+    private void scheduleJobs(ScheduleAdapter adapter) {
+        // check updates
+        UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter);
+        updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // schedule next checks
+        AlarmManager alarmManager = new AlarmManager(getActivity());
+        alarmManager.startBackgroundService();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         try {
             storage.close();
         } catch (SnappydbException e) {

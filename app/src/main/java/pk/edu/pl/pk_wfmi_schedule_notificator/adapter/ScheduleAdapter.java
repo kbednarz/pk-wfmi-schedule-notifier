@@ -1,4 +1,4 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
+package pk.edu.pl.pk_wfmi_schedule_notificator.adapter;
 
 
 import android.support.v7.widget.RecyclerView;
