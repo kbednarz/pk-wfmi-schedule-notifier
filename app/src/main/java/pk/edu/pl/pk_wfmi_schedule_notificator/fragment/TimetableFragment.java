@@ -34,7 +34,7 @@ public class TimetableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
-            view = inflater.inflate(R.layout.activity_list_files, container, false);
+            view = inflater.inflate(R.layout.fragment_timetable, container, false);
 
             storage = new Storage(getActivity());
             List<Timetable> timetables = storage.readTimetable();
