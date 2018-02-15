@@ -1,6 +1,7 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.fragment;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,6 +66,12 @@ public class TimetableFragment extends Fragment {
         // schedule next checks
         AlarmManager alarmManager = new AlarmManager(getActivity());
         alarmManager.startBackgroundService();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getActivity().getActionBar().setTitle(R.string.schedules_section);
     }
 
     @Override
