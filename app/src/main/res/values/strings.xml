@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">PK Notifier</string>
-    <string name="title_activity_list_files">Timetables</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="schedules_section">Schedules</string>
     <string name="about_section">About</string>
