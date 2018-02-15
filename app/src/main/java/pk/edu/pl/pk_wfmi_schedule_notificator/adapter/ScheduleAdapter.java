@@ -1,4 +1,4 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
+package pk.edu.pl.pk_wfmi_schedule_notificator.adapter;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +22,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     @Override
     public ScheduleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.listview_row, parent, false);
+                .inflate(R.layout.adapter_schedule, parent, false);
 
         return new ScheduleHolder(itemView);
     }

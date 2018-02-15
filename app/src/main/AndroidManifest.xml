@@ -16,10 +16,11 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.FileListActivity"
-            android:label="@string/title_activity_list_files">
-            <intent-filter android:label="@string/app_name">
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,7 +28,6 @@
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:enabled="true" />
-
         <receiver
             android:name=".receiver.DeviceBootReceiver"
             android:enabled="false">
@@ -39,6 +39,7 @@
         <service
             android:name=".job.NotificationJob"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>
