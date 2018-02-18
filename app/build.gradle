@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'project-report'
 
 android {
     compileSdkVersion 26
@@ -20,26 +21,24 @@ android {
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:support-v4:26.1.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.sun.mail:android-mail:1.5.5'
+    implementation 'org.jsoup:jsoup:1.10.3'
+    implementation(group: 'com.github.tony19', name: 'logback-android-classic', version: '1.1.1-6', {
+        exclude group: 'com.google.android'
+    })
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation 'com.android.support:support-compat:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.snappydb:snappydb-lib:0.5.2'
+    implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
+    implementation group: 'com.google.guava', name: 'guava', version: '23.5-android'
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     })
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.11.0'
-
-    implementation 'org.jsoup:jsoup:1.10.3'
-
-    compile group: 'com.github.tony19', name: 'logback-android-classic', version: '1.1.1-6'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-
-    implementation 'com.android.support:support-compat:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-
-    compile 'com.snappydb:snappydb-lib:0.5.2'
-    compile 'com.esotericsoftware.kryo:kryo:2.24.0'
-
-    compile group: 'com.google.guava', name: 'guava', version: '23.5-android'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.15.0'
 }
