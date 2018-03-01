@@ -11,6 +11,7 @@ android {
         versionCode 3
         versionName "0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "pk-notifier-$versionName")
     }
     buildTypes {
         release {
