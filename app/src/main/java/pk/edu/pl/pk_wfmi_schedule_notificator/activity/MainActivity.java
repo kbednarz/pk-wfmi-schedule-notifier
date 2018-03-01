@@ -1,9 +1,13 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
@@ -31,6 +35,8 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        checkStoragePermission();
     }
 
     @Override
@@ -50,6 +56,16 @@ public class MainActivity extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+    }
+
+    public void checkStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission
+                        .WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
     }
 
 }
