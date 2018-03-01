@@ -2,13 +2,11 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.storage;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,7 @@ import java.util.List;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class Storage {
-    private static final Logger logger = LoggerFactory.getLogger(Storage.class);
+    private static final String TAG = "Storage";
     DB db;
 
     public Storage(Context context) throws SnappydbException {
@@ -34,20 +32,20 @@ public class Storage {
 
     public List<Timetable> readTimetable() throws SnappydbException {
         List<Timetable> timetables = new ArrayList<>();
-        logger.trace("Reading timetables");
+        Log.d(TAG, "Reading timetables");
 
         if (db.exists("timetable")) {
             Timetable[] array = db.getObjectArray("timetable", Timetable.class);
             timetables = new ArrayList<>(Arrays.asList(array));
         } else {
-            logger.trace("Storage is empty");
+            Log.d(TAG, "Storage is empty");
         }
 
         return timetables;
     }
 
     public void saveTimetable(List<Timetable> timetables) throws SnappydbException {
-        logger.trace("Saving timetables");
+        Log.d(TAG, "Saving timetables");
         db.put("timetable", timetables.toArray());
     }
 

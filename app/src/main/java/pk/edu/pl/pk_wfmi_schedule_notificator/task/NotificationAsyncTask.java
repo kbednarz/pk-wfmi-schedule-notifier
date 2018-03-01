@@ -8,11 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.snappydb.SnappydbException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
-    private Logger log = LoggerFactory.getLogger(NotificationAsyncTask.class);
+    private static final String TAG = "NotificationAsyncTask";
 
     private Storage storage;
     private TimetableManager timetableManager;
@@ -41,11 +39,11 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
 
     @Override
     protected List<Timetable> doInBackground(Void... voids) {
-        log.debug("NotificationAsyncTask started");
+        Log.d(TAG, "NotificationAsyncTask started");
         try {
             return timetableManager.fetchNewest();
         } catch (Exception e) {
-            log.error("NotificationAsyncTask error occurred", e);
+            Log.e(TAG, "NotificationAsyncTask error occurred", e);
             return null;
         }
     }
@@ -53,17 +51,17 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     @Override
     protected void onPostExecute(List<Timetable> timetable) {
         if (timetable != null) {
-            log.debug("New schedule appeared. Calling notification");
+            Log.d(TAG, "New schedule appeared. Calling notification");
             sendNotification(context);
         }
 
         closeStorage();
 
-        log.debug("NotificationAsyncTask finished");
+        Log.d(TAG, "NotificationAsyncTask finished");
     }
 
     private void sendNotification(Context context) {
-        log.debug("Sending notification");
+        Log.d(TAG, "Sending notification");
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, "channel_xd")
@@ -95,7 +93,7 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
         try {
             storage.close();
         } catch (SnappydbException e) {
-            log.error("Cannot close DB", e);
+            Log.d(TAG, "Cannot close DB", e);
         }
     }
 }
