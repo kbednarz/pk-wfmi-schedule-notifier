@@ -2,9 +2,7 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
 import android.os.AsyncTask;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
 
 import java.util.List;
 
@@ -14,7 +12,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
-    private static final Logger logger = LoggerFactory.getLogger(UpdateFileAsyncTask.class);
+    private static final String TAG = "UpdateFileAsyncTask";
     private ScheduleAdapter adapter;
     private TimetableManager timetableManager;
 
@@ -29,7 +27,7 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
         try {
             return timetableManager.fetchNewest();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return null;
         }
     }
@@ -38,7 +36,7 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
     protected void onPostExecute(List<Timetable> timetables) {
         super.onPostExecute(timetables);
         if (timetables != null) {
-            logger.debug("Updating current timetable list");
+            Log.d(TAG, "Updating current timetable list");
             adapter.setTimetables(timetables);
         }
     }

@@ -9,14 +9,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.snappydb.SnappydbException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
 
 public class TimetableFragment extends Fragment {
-    private static Logger log = LoggerFactory.getLogger(TimetableFragment.class);
+    private static final String TAG = "TimetableFragment";
     private Storage storage;
 
     @Override
@@ -53,7 +51,7 @@ public class TimetableFragment extends Fragment {
 
             scheduleJobs(adapter);
         } catch (Exception e) {
-            log.error("Exception in Timetable fragment", e);
+            Log.e(TAG, "Exception in Timetable fragment", e);
         }
         return view;
     }
@@ -80,7 +78,7 @@ public class TimetableFragment extends Fragment {
         try {
             storage.close();
         } catch (SnappydbException e) {
-            log.error("Cannot close DB", e);
+            Log.e(TAG, "Cannot close DB", e);
         }
     }
 

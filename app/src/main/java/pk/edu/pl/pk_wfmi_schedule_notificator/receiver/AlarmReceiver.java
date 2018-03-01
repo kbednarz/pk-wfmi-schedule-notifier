@@ -10,37 +10,35 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.job.NotificationJob;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.NotificationAsyncTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    private Logger log = LoggerFactory.getLogger(AlarmReceiver.class);
+    private static final String TAG = "AlarmReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        log.debug("Receiving alarm broadcast");
+        Log.d(TAG, "Receiving alarm broadcast");
 
         if (isOnline(context)) {
             try {
-                log.trace("Device is online. Checking timetable");
+                Log.d(TAG, "Device is online. Checking timetable");
                 NotificationAsyncTask notificationAsyncTask = new NotificationAsyncTask(context);
                 notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } catch (Exception e) {
-                log.error("AlarmReceiver exception occurred", e);
+                Log.e(TAG, "AlarmReceiver exception occurred", e);
                 scheduleJob(context);
             }
         } else {
-            log.trace("Device is offline. Scheduling job");
+            Log.d(TAG, "Device is offline. Scheduling job");
             scheduleJob(context);
         }
     }
 
     private void scheduleJob(Context context) {
-        log.trace("Scheduling job");
+        Log.d(TAG, "Scheduling job");
 
         ComponentName serviceComponent = new ComponentName(context, NotificationJob.class);
         JobInfo.Builder builder = new JobInfo.Builder(10, serviceComponent);

@@ -25,10 +25,6 @@ dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.sun.mail:android-mail:1.5.5'
     implementation 'org.jsoup:jsoup:1.10.3'
-    implementation(group: 'com.github.tony19', name: 'logback-android-classic', version: '1.1.1-6', {
-        exclude group: 'com.google.android'
-    })
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     implementation 'com.android.support:support-compat:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
