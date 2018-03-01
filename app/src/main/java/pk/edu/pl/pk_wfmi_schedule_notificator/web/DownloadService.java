@@ -18,6 +18,8 @@ public class DownloadService {
     public void downloadSchedule(Timetable timetable) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(timetable.getUrl()));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, timetable.getFileName());
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
         DownloadManager manager = (DownloadManager) context.getSystemService(Context
                 .DOWNLOAD_SERVICE);
         manager.enqueue(request);
