@@ -2,6 +2,7 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import java.util.List;
@@ -15,10 +16,11 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
     private static final String TAG = "UpdateFileAsyncTask";
     private ScheduleAdapter adapter;
     private TimetableManager timetableManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-
-    public UpdateFileAsyncTask(Storage storage, ScheduleAdapter adapter) {
+    public UpdateFileAsyncTask(Storage storage, ScheduleAdapter adapter, SwipeRefreshLayout mSwipeRefreshLayout) {
         this.adapter = adapter;
+        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         timetableManager = new TimetableManager(storage);
     }
 
@@ -39,5 +41,6 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
             Log.d(TAG, "Updating current timetable list");
             adapter.setTimetables(timetables);
         }
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }
