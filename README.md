@@ -4,3 +4,5 @@ Simple Android application which looks for schedule's update on http://www.fmi.p
 * Keeps history of schedules
 * Allows to download
 * Periodically checks for schedule's update and shows notification in task bar 
+## Requirements
+* Android Lollipop (5.0)	
