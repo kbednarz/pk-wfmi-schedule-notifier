@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
@@ -28,6 +30,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
 public class TimetableFragment extends Fragment {
     private static final String TAG = "TimetableFragment";
     private Storage storage;
+    private UpdateFileAsyncTask updateFileAsyncTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,18 +52,25 @@ public class TimetableFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
-            scheduleJobs(adapter);
+            SwipeRefreshLayout mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
+            scheduleJobs();
+            mSwipeRefreshLayout.setOnRefreshListener(() -> updateSchedule(adapter, mSwipeRefreshLayout));
+            updateSchedule(adapter, mSwipeRefreshLayout);
         } catch (Exception e) {
             Log.e(TAG, "Exception in Timetable fragment", e);
         }
         return view;
     }
 
-    private void scheduleJobs(ScheduleAdapter adapter) {
-        // check updates
-        UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter);
-        updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    private void updateSchedule(ScheduleAdapter adapter, SwipeRefreshLayout mSwipeRefreshLayout) {
+        mSwipeRefreshLayout.setRefreshing(true);
 
+        Toast toast = Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG);
+        updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter, mSwipeRefreshLayout, toast);
+        updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void scheduleJobs() {
         // schedule next checks
         AlarmManager alarmManager = new AlarmManager(getActivity());
         alarmManager.startBackgroundService();
