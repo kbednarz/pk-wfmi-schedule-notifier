@@ -2,11 +2,13 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -63,8 +65,10 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     private void sendNotification(Context context) {
         Log.d(TAG, "Sending notification");
 
+        String CHANNEL_ID = "pk_notifier_channel_01";
+
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, "channel_xd")
+                new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.notification_small_icon)
                         .setContentTitle("PK WFMI")
                         .setContentText("New schedule appeared!");
@@ -81,12 +85,18 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
 
         mBuilder.setContentIntent(resultPendingIntent);
 
-        int mNotificationId = 001;
-
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        if (mNotifyMgr != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
+                        "PK Notifier", NotificationManager.IMPORTANCE_HIGH);
+                mNotifyMgr.createNotificationChannel(mChannel);
+            }
+
+            mNotifyMgr.notify(1, mBuilder.build());
+        }
     }
 
     private void closeStorage() {
