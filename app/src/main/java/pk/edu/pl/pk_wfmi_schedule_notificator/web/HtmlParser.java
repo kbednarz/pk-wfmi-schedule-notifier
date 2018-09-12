@@ -13,10 +13,12 @@ import java.util.Date;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class HtmlParser {
-    private String pageUrl;
+    private final String pageUrl;
+    private final String keyword;
 
-    public HtmlParser(String pageUrl) {
+    public HtmlParser(String pageUrl, String keyword) {
         this.pageUrl = pageUrl;
+        this.keyword = keyword;
     }
 
     /**
@@ -29,7 +31,7 @@ public class HtmlParser {
         Elements links = doc.select("a[href]");
         for (Element link : links) {
             String name = link.toString();
-            if (name.contains("NIESTACJONARNE")) {
+            if (name.contains(keyword)) {
                 return link;
             }
         }

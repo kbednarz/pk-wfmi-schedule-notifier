@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.snappydb.SnappydbException;
 
+import java.io.IOException;
 import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
@@ -33,10 +34,10 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     @SuppressLint("StaticFieldLeak")
     private Context context;
 
-    public NotificationAsyncTask(Context context) throws SnappydbException {
+    public NotificationAsyncTask(Context context) throws SnappydbException, IOException {
         this.context = context;
         storage = new Storage(context);
-        timetableManager = new TimetableManager(storage);
+        timetableManager = new TimetableManager(storage, context);
     }
 
     @Override

@@ -3,7 +3,7 @@ apply plugin: 'project-report'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "pk.edu.pl.pk_wfmi_schedule_notificator"
         minSdkVersion 21

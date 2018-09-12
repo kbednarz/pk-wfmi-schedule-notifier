@@ -1,11 +1,13 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -19,14 +21,15 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
     private ScheduleAdapter adapter;
     private TimetableManager timetableManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private Toast errorToast;
+    private Context context;
 
     public UpdateFileAsyncTask(Storage storage, ScheduleAdapter adapter, SwipeRefreshLayout
-            mSwipeRefreshLayout, Toast errorToast) {
+            mSwipeRefreshLayout, Context context) throws IOException {
         this.adapter = adapter;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
-        this.errorToast = errorToast;
-        timetableManager = new TimetableManager(storage);
+        this.context = context;
+
+        timetableManager = new TimetableManager(storage, context);
     }
 
     @Override
@@ -35,8 +38,7 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
             return timetableManager.fetchNewest();
         } catch (UnknownHostException e) {
             Log.e(TAG, e.getMessage(), e);
-            errorToast.setText("Network error");
-            errorToast.show();
+            Toast.makeText(context, "Network error", Toast.LENGTH_LONG).show();
             return null;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
