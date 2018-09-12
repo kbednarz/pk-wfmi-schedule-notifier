@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
+import java.io.IOException;
 import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
@@ -63,11 +64,13 @@ public class TimetableFragment extends Fragment {
     }
 
     private void updateSchedule(ScheduleAdapter adapter, SwipeRefreshLayout mSwipeRefreshLayout) {
-        mSwipeRefreshLayout.setRefreshing(true);
-
-        Toast toast = Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG);
-        updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter, mSwipeRefreshLayout, toast);
-        updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        try {
+            mSwipeRefreshLayout.setRefreshing(true);
+            updateFileAsyncTask = new UpdateFileAsyncTask(storage, adapter, mSwipeRefreshLayout, getActivity());
+            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (IOException e) {
+            Log.e(TAG, "Update error", e);
+        }
     }
 
     private void scheduleJobs() {
