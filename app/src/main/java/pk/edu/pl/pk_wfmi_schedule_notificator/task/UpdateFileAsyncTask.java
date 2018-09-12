@@ -2,6 +2,7 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.task;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -11,21 +12,19 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import pk.edu.pl.pk_wfmi_schedule_notificator.adapter.ScheduleAdapter;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
+    public final static String FILTER = "TIMETABLE_UPDATE_FILTER";
     private static final String TAG = "UpdateFileAsyncTask";
-    private ScheduleAdapter adapter;
     private TimetableManager timetableManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Context context;
 
-    public UpdateFileAsyncTask(Storage storage, ScheduleAdapter adapter, SwipeRefreshLayout
+    public UpdateFileAsyncTask(Storage storage, SwipeRefreshLayout
             mSwipeRefreshLayout, Context context) throws IOException {
-        this.adapter = adapter;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         this.context = context;
 
@@ -51,7 +50,9 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
         super.onPostExecute(timetables);
         if (timetables != null) {
             Log.d(TAG, "Updating current timetable list");
-            adapter.setTimetables(timetables);
+//            adapter.setTimetables(timetables);
+            Intent intent = new Intent(FILTER);
+            context.sendBroadcast(intent);
         }
         mSwipeRefreshLayout.setRefreshing(false);
     }

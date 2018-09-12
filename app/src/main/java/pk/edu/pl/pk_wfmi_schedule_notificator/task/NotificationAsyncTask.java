@@ -57,9 +57,6 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
             Log.d(TAG, "New schedule appeared. Calling notification");
             sendNotification(context);
         }
-
-        closeStorage();
-
         Log.d(TAG, "NotificationAsyncTask finished");
     }
 
@@ -100,11 +97,4 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
         }
     }
 
-    private void closeStorage() {
-        try {
-            storage.close();
-        } catch (SnappydbException e) {
-            Log.d(TAG, "Cannot close DB", e);
-        }
-    }
 }
