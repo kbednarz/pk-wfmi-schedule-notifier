@@ -34,8 +34,11 @@ public class TimetableManager {
             storage.saveTimetable(fetchedTimetable);
 
             return fetchedTimetable;
+        } else {
+            currentTimetable.setLastUpdate(fetchedTimetable.getLastUpdate());
+            storage.saveTimetable(currentTimetable);
+            return null;
         }
-        return null;
     }
 
     private boolean hasChanged(Timetable lastTimetable, Timetable timetableToValidate) {

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
+import java.text.DateFormat;
 import java.util.Objects;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
@@ -29,6 +30,8 @@ public class TimetableFragment extends Fragment {
     private TimetableManager timetableManager;
     private View view;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class TimetableFragment extends Fragment {
                 scheduleName.setText(timetable.getFileName());
 
                 TextView lastUpdate = view.findViewById(R.id.lastUpdateDateTextView);
-                lastUpdate.setText(timetable.getLastUpdate().toString());
+                lastUpdate.setText(dateFormat.format(timetable.getLastUpdate()));
             }
         } catch (SnappydbException e) {
             Log.e(TAG, "Database error", e);

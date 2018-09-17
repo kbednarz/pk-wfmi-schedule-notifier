@@ -28,10 +28,6 @@ public class TimetableEventReceiver extends BroadcastReceiver {
     }
 
     private void handleSuccess(Intent intent) {
-        if (intent.getBooleanExtra(NEWER_APPEARED, false)) {
-            fragment.updateTimetableView();
-        } else {
-            fragment.onFinish();
-        }
+        fragment.updateTimetableView();
     }
 }
