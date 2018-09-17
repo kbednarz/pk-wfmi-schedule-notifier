@@ -19,18 +19,17 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.AlarmManager;
-import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
+import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.UpdateFileAsyncTask;
 
 public class TimetableFragment extends Fragment {
     private static final String TAG = "TimetableFragment";
-    private Storage storage;
+    private TimetableManager timetableManager;
     private View view;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -38,30 +37,41 @@ public class TimetableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             view = inflater.inflate(R.layout.fragment_timetable, container, false);
-            storage = new Storage(getActivity());
+            timetableManager = new TimetableManager(getActivity());
             mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
-            mSwipeRefreshLayout.setOnRefreshListener(() -> updateSchedule(mSwipeRefreshLayout));
+            mSwipeRefreshLayout.setOnRefreshListener(this::updateSchedule);
 
             getActivity().registerReceiver(new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    updateTimetableView();
+                    boolean error = intent.getBooleanExtra("error", false);
+                    if (error) {
+                        String detail = intent.getStringExtra("errorMsg");
+                        onError(detail);
+                    } else {
+                        if (intent.getBooleanExtra("isNewerAppeared", false)) {
+                            updateTimetableView();
+                        } else {
+                            onFinish();
+                        }
+                    }
                 }
             }, new IntentFilter(UpdateFileAsyncTask.FILTER));
 
             updateTimetableView();
-            updateSchedule(mSwipeRefreshLayout);
+            updateSchedule();
 
             scheduleNextCheck();
         } catch (Exception e) {
             Log.e(TAG, "Exception in Timetable fragment", e);
+            onError(e.getMessage());
         }
         return view;
     }
 
     private void updateTimetableView() {
         try {
-            Timetable timetable = storage.readTimetable();
+            Timetable timetable = timetableManager.getLatest();
 
             if (timetable != null) {
                 TextView scheduleName = view.findViewById(R.id.scheduleFileNameTextView);
@@ -70,23 +80,26 @@ public class TimetableFragment extends Fragment {
                 TextView lastUpdate = view.findViewById(R.id.lastUpdateDateTextView);
                 lastUpdate.setText(timetable.getLastUpdate().toString());
             }
-
-            mSwipeRefreshLayout.setRefreshing(false);
         } catch (SnappydbException e) {
             Log.e(TAG, "Database error", e);
-            Toast.makeText(getActivity(), "Can't update", Toast.LENGTH_SHORT).show();
+            onError("Can't update");
+        } finally {
+            onFinish();
         }
     }
 
-    private void updateSchedule(SwipeRefreshLayout mSwipeRefreshLayout) {
-        try {
-            mSwipeRefreshLayout.setRefreshing(true);
-            UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(storage, mSwipeRefreshLayout, getActivity());
-            updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (IOException e) {
-            Log.e(TAG, "Update error", e);
-            Toast.makeText(getActivity(), "Can't update", Toast.LENGTH_SHORT).show();
-        }
+    private void onFinish() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void onError(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateSchedule() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(timetableManager, getActivity());
+        updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void scheduleNextCheck() {

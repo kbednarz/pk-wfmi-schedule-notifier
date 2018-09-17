@@ -14,12 +14,10 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.web.HtmlParser;
 
 public class TimetableManager {
     private Storage storage;
-    private Context context;
     private HtmlParser htmlParser;
 
-    public TimetableManager(Storage storage, Context context) throws IOException {
-        this.storage = storage;
-        this.context = context;
+    public TimetableManager(Context context) throws IOException, SnappydbException {
+        this.storage = new Storage(context);
 
         htmlParser = new HtmlParser(Config.getProperty("schedule.url", context), Config.getProperty("schedule.keyword", context));
     }
