@@ -1,11 +1,8 @@
-package pk.edu.pl.pk_wfmi_schedule_notificator.fragment;
+package pk.edu.pl.pk_wfmi_schedule_notificator.timetable;
 
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,22 +38,7 @@ public class TimetableFragment extends Fragment {
             mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
             mSwipeRefreshLayout.setOnRefreshListener(this::updateSchedule);
 
-            getActivity().registerReceiver(new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    boolean error = intent.getBooleanExtra("error", false);
-                    if (error) {
-                        String detail = intent.getStringExtra("errorMsg");
-                        onError(detail);
-                    } else {
-                        if (intent.getBooleanExtra("isNewerAppeared", false)) {
-                            updateTimetableView();
-                        } else {
-                            onFinish();
-                        }
-                    }
-                }
-            }, new IntentFilter(UpdateFileAsyncTask.FILTER));
+            getActivity().registerReceiver(new TimetableEventReceiver(this), new IntentFilter(TimetableEventReceiver.EVENT_FILTER));
 
             updateTimetableView();
             updateSchedule();
@@ -69,7 +51,7 @@ public class TimetableFragment extends Fragment {
         return view;
     }
 
-    private void updateTimetableView() {
+    void updateTimetableView() {
         try {
             Timetable timetable = timetableManager.getLatest();
 
@@ -88,11 +70,11 @@ public class TimetableFragment extends Fragment {
         }
     }
 
-    private void onFinish() {
+    void onFinish() {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private void onError(String msg) {
+    void onError(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 

@@ -13,7 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.fragment.AboutFragment;
 import pk.edu.pl.pk_wfmi_schedule_notificator.fragment.NavigationDrawerFragment;
-import pk.edu.pl.pk_wfmi_schedule_notificator.fragment.TimetableFragment;
+import pk.edu.pl.pk_wfmi_schedule_notificator.timetable.TimetableFragment;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

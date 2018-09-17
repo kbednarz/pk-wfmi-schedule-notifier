@@ -8,9 +8,9 @@ import android.util.Log;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
+import pk.edu.pl.pk_wfmi_schedule_notificator.timetable.TimetableEventReceiver;
 
 public class UpdateFileAsyncTask extends AsyncTask<Void, Void, Timetable> {
-    public final static String FILTER = "TIMETABLE_UPDATE_FILTER";
     private static final String TAG = "UpdateFileAsyncTask";
     private TimetableManager timetableManager;
     private Context context;
@@ -26,9 +26,9 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, Timetable> {
             return timetableManager.update();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            Intent intent = new Intent(FILTER);
-            intent.putExtra("error", true);
-            intent.putExtra("errorMsg", e.getMessage());
+            Intent intent = new Intent(TimetableEventReceiver.EVENT_FILTER);
+            intent.putExtra(TimetableEventReceiver.ERROR, true);
+            intent.putExtra(TimetableEventReceiver.ERROR_MESSAGE, e.getMessage());
             context.sendBroadcast(intent);
             return null;
         }
@@ -37,10 +37,10 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, Timetable> {
     @Override
     protected void onPostExecute(Timetable timetables) {
         super.onPostExecute(timetables);
-        Intent intent = new Intent(FILTER);
+        Intent intent = new Intent(TimetableEventReceiver.EVENT_FILTER);
         if (timetables != null) {
             Log.d(TAG, "Updating current timetable list");
-            intent.putExtra("isNewerAppeared", true);
+            intent.putExtra(TimetableEventReceiver.NEWER_APPEARED, true);
         }
         context.sendBroadcast(intent);
     }
