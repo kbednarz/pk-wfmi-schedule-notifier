@@ -8,14 +8,12 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class Storage {
     private static final String TAG = "Storage";
+    private static final String DB_TIMETABLE_KEY = "timetable";
+
     DB db;
 
     public Storage(Context context) throws SnappydbException {
@@ -30,23 +28,20 @@ public class Storage {
         db.destroy();
     }
 
-    public List<Timetable> readTimetable() throws SnappydbException {
-        List<Timetable> timetables = new ArrayList<>();
-        Log.d(TAG, "Reading timetables");
+    public Timetable readTimetable() throws SnappydbException {
+        Log.d(TAG, "Reading timetable");
 
-        if (db.exists("timetable")) {
-            Timetable[] array = db.getObjectArray("timetable", Timetable.class);
-            timetables = new ArrayList<>(Arrays.asList(array));
+        if (db.exists(DB_TIMETABLE_KEY)) {
+            return db.getObject(DB_TIMETABLE_KEY, Timetable.class);
         } else {
             Log.d(TAG, "Storage is empty");
+            return null;
         }
-
-        return timetables;
     }
 
-    public void saveTimetable(List<Timetable> timetables) throws SnappydbException {
-        Log.d(TAG, "Saving timetables");
-        db.put("timetable", timetables.toArray());
+    public void saveTimetable(Timetable timetable) throws SnappydbException {
+        Log.d(TAG, "Saving timetable");
+        db.put("timetable", timetable);
     }
 
 }

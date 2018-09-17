@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.snappydb.SnappydbException;
 
 import java.io.IOException;
-import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
@@ -66,10 +64,13 @@ public class TimetableFragment extends Fragment {
     }
 
     private void updateTimetableView() throws SnappydbException {
-        List<Timetable> timetables = storage.readTimetable();
-        if (timetables != null && !timetables.isEmpty()) {
+        Timetable timetable = storage.readTimetable();
+        if (timetable != null) {
             TextView scheduleName = view.findViewById(R.id.scheduleFileNameTextView);
-            scheduleName.setText(timetables.get(0).getFileName());
+            scheduleName.setText(timetable.getFileName());
+
+            TextView lastUpdate = view.findViewById(R.id.lastUpdateDateTextView);
+            lastUpdate.setText(timetable.getLastUpdate().toString());
         }
     }
 

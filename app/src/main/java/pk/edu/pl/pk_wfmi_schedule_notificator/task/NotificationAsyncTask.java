@@ -25,7 +25,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
+public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
     private static final String TAG = "NotificationAsyncTask";
 
     private Storage storage;
@@ -41,10 +41,10 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     }
 
     @Override
-    protected List<Timetable> doInBackground(Void... voids) {
+    protected Timetable doInBackground(Void... voids) {
         Log.d(TAG, "NotificationAsyncTask started");
         try {
-            return timetableManager.fetchNewest();
+            return timetableManager.update();
         } catch (Exception e) {
             Log.e(TAG, "NotificationAsyncTask error occurred", e);
             return null;
@@ -52,7 +52,7 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     }
 
     @Override
-    protected void onPostExecute(List<Timetable> timetable) {
+    protected void onPostExecute(Timetable timetable) {
         if (timetable != null) {
             Log.d(TAG, "New schedule appeared. Calling notification");
             sendNotification(context);

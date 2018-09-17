@@ -16,7 +16,7 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
-public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
+public class UpdateFileAsyncTask extends AsyncTask<Void, Void, Timetable> {
     public final static String FILTER = "TIMETABLE_UPDATE_FILTER";
     private static final String TAG = "UpdateFileAsyncTask";
     private TimetableManager timetableManager;
@@ -32,9 +32,9 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
     }
 
     @Override
-    protected List<Timetable> doInBackground(Void... voids) {
+    protected Timetable doInBackground(Void... voids) {
         try {
-            return timetableManager.fetchNewest();
+            return timetableManager.update();
         } catch (UnknownHostException e) {
             Log.e(TAG, e.getMessage(), e);
             Toast.makeText(context, "Network error", Toast.LENGTH_LONG).show();
@@ -46,7 +46,7 @@ public class UpdateFileAsyncTask extends AsyncTask<Void, Void, List<Timetable>> 
     }
 
     @Override
-    protected void onPostExecute(List<Timetable> timetables) {
+    protected void onPostExecute(Timetable timetables) {
         super.onPostExecute(timetables);
         if (timetables != null) {
             Log.d(TAG, "Updating current timetable list");

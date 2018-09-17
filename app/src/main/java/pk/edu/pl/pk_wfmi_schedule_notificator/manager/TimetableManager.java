@@ -3,10 +3,9 @@ package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 import android.content.Context;
 
-import com.google.common.collect.Iterables;
+import com.snappydb.SnappydbException;
 
 import java.io.IOException;
-import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
@@ -25,21 +24,23 @@ public class TimetableManager {
         htmlParser = new HtmlParser(Config.getProperty("schedule.url", context), Config.getProperty("schedule.keyword", context));
     }
 
-    public List<Timetable> fetchNewest() throws Exception {
-        List<Timetable> timetables = storage.readTimetable();
+    public Timetable getLatest() throws SnappydbException {
+        return storage.readTimetable();
+    }
+
+    public Timetable update() throws Exception {
+        Timetable currentTimetable = storage.readTimetable();
         Timetable fetchedTimetable = htmlParser.fetchTimetable();
 
-        if (hasChanged(timetables, fetchedTimetable)) {
-            timetables.add(fetchedTimetable);
-            storage.saveTimetable(timetables);
+        if (hasChanged(currentTimetable, fetchedTimetable)) {
+            storage.saveTimetable(fetchedTimetable);
 
-            return timetables;
+            return fetchedTimetable;
         }
         return null;
     }
 
-    private boolean hasChanged(List<Timetable> timetables, Timetable timetableToValidate) {
-        Timetable lastTimetable = Iterables.getLast(timetables, null);
+    private boolean hasChanged(Timetable lastTimetable, Timetable timetableToValidate) {
         return lastTimetable == null || !timetableToValidate.getFileName().equals(lastTimetable.getFileName());
     }
 }
