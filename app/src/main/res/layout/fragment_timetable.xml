@@ -42,19 +42,19 @@
             android:layout_height="64dp"
             android:gravity="center"
             android:text="@string/schedule"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Title"
-            android:textStyle="bold" />
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
         <TextView
             android:id="@+id/scheduleFileNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin_small"
             android:background="@drawable/rounded_textview"
-            android:padding="@dimen/text_margin_small"
+            android:padding="@dimen/text_margin"
             android:text="@string/no_data"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Holo.Large" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp" />
 
 
     </LinearLayout>

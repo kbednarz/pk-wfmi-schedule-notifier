@@ -12,6 +12,6 @@
     <string name="authors">Authors:</string>
     <string name="authors_list">Kamil Bednarz</string>
     <string name="last_update">Last update:</string>
-    <string name="schedule">Schedule</string>
+    <string name="schedule">Latest schedule</string>
     <string name="no_data">NO DATA</string>
 </resources>
