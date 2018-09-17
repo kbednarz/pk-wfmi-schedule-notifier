@@ -16,9 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="70"
-            android:background="@color/colorPrimaryDark"
             android:orientation="vertical">
-
 
             <ImageView
                 android:id="@+id/material_bg"
