@@ -8,8 +8,8 @@ android {
         applicationId "pk.edu.pl.pk_wfmi_schedule_notificator"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 3
-        versionName "0.3"
+        versionCode 4
+        versionName "0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "pk-notifier-$versionName")
     }
