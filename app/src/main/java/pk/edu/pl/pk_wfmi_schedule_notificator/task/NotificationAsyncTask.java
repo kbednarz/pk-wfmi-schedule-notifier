@@ -15,20 +15,17 @@ import android.util.Log;
 import com.snappydb.SnappydbException;
 
 import java.io.IOException;
-import java.util.List;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.activity.MainActivity;
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 import pk.edu.pl.pk_wfmi_schedule_notificator.manager.TimetableManager;
-import pk.edu.pl.pk_wfmi_schedule_notificator.storage.Storage;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>> {
+public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
     private static final String TAG = "NotificationAsyncTask";
 
-    private Storage storage;
     private TimetableManager timetableManager;
 
     @SuppressLint("StaticFieldLeak")
@@ -36,15 +33,14 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
 
     public NotificationAsyncTask(Context context) throws SnappydbException, IOException {
         this.context = context;
-        storage = new Storage(context);
-        timetableManager = new TimetableManager(storage, context);
+        timetableManager = new TimetableManager(context);
     }
 
     @Override
-    protected List<Timetable> doInBackground(Void... voids) {
+    protected Timetable doInBackground(Void... voids) {
         Log.d(TAG, "NotificationAsyncTask started");
         try {
-            return timetableManager.fetchNewest();
+            return timetableManager.update();
         } catch (Exception e) {
             Log.e(TAG, "NotificationAsyncTask error occurred", e);
             return null;
@@ -52,14 +48,11 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
     }
 
     @Override
-    protected void onPostExecute(List<Timetable> timetable) {
+    protected void onPostExecute(Timetable timetable) {
         if (timetable != null) {
             Log.d(TAG, "New schedule appeared. Calling notification");
             sendNotification(context);
         }
-
-        closeStorage();
-
         Log.d(TAG, "NotificationAsyncTask finished");
     }
 
@@ -100,11 +93,4 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, List<Timetable>
         }
     }
 
-    private void closeStorage() {
-        try {
-            storage.close();
-        } catch (SnappydbException e) {
-            Log.d(TAG, "Cannot close DB", e);
-        }
-    }
 }
