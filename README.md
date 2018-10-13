@@ -1,8 +1,7 @@
 # PK Notifier
-Simple Android application which looks for schedule's update on http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php
+Android application which checks for schedule's update on https://fmi.pk.edu.pl/page/rz
 ## Features
-* Keeps history of schedules
+* Notifies about new schedule
 * Allows to download
-* Periodically checks for schedule's update and shows notification in task bar 
 ## Requirements
 * Android Lollipop (5.0)	
