@@ -1,24 +1,19 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.web;
 
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.Date;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class HtmlParser {
     private final String pageUrl;
-    private final String keyword;
 
-    public HtmlParser(String pageUrl, String keyword) {
+    public HtmlParser(String pageUrl) {
         this.pageUrl = pageUrl;
-        this.keyword = keyword;
     }
 
     /**
@@ -26,38 +21,24 @@ public class HtmlParser {
      *
      * @return found element
      */
-    private Element fetchXlsFile() throws Exception {
-        Document doc = Jsoup.connect(pageUrl).timeout(1000 * 10).get();
-        Elements links = doc.select("a[href]");
-        for (Element link : links) {
-            String name = link.toString();
-            if (name.contains(keyword)) {
-                return link;
-            }
+    private Element findScheduleInDOM(Document doc) throws Exception {
+        try {
+            return doc.select("p:contains(STUDIA NIESTACJONARNE)").parents().first().select("li:contains(Informatyka I stopień)").select("a").first();
+        } catch (NullPointerException e) {
+            throw new Exception("XLS file not found in DOM");
         }
-        throw new Exception("XLS file not found in DOM");
     }
 
     public Timetable fetchTimetable() throws Exception {
-        Element link = fetchXlsFile();
-        String url = link.attr("href").replaceAll(" ", "%20");
+        Document doc = Jsoup.connect(pageUrl).timeout(1000 * 10).get();
+        Element link = findScheduleInDOM(doc);
+        String fileUrl = link.attr("href");
 
         Timetable timetable = new Timetable();
-        timetable.setFileName(getFilename(link.toString()));
         timetable.setLastUpdate(new Date());
-        timetable.setUrl(url);
+        timetable.setUrl(doc.baseUri() + fileUrl);
 
         return timetable;
     }
 
-    private String getFilename(String url) {
-        String name = url.substring(0, url.indexOf("xls") + 3);
-        name = name.substring(name.lastIndexOf("/") + 1);
-        return name;
-    }
-
-    private byte[] downloadFile(String url) throws IOException {
-        Connection.Response response = Jsoup.connect(url).ignoreContentType(true).execute();
-        return response.bodyAsBytes();
-    }
 }

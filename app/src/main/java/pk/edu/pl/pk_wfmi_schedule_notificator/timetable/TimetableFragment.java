@@ -40,6 +40,7 @@ public class TimetableFragment extends Fragment {
             timetableManager = new TimetableManager(getActivity());
             mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
             mSwipeRefreshLayout.setOnRefreshListener(this::updateSchedule);
+            setupScheduleButtons();
 
             getActivity().registerReceiver(new TimetableEventReceiver(this), new IntentFilter(TimetableEventReceiver.EVENT_FILTER));
 
@@ -60,8 +61,17 @@ public class TimetableFragment extends Fragment {
 
             if (timetable != null) {
                 TextView scheduleName = view.findViewById(R.id.scheduleFileNameTextView);
-                scheduleName.setText(timetable.getFileName());
+                TextView newSchedule = view.findViewById(R.id.newScheduleTextView);
 
+                if (timetable.getFileName() != null) {
+                    scheduleName.setText(timetable.getFileName());
+
+                    scheduleName.setVisibility(View.VISIBLE);
+                    newSchedule.setVisibility(View.GONE);
+                } else if (timetable.getUrl() != null) {
+                    scheduleName.setVisibility(View.GONE);
+                    newSchedule.setVisibility(View.VISIBLE);
+                }
                 TextView lastUpdate = view.findViewById(R.id.lastUpdateDateTextView);
                 lastUpdate.setText(dateFormat.format(timetable.getLastUpdate()));
             }
@@ -79,6 +89,17 @@ public class TimetableFragment extends Fragment {
 
     void onError(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void setupScheduleButtons() {
+        TextView currentSchedule = view.findViewById(R.id.scheduleFileNameTextView);
+        currentSchedule.setVisibility(View.GONE);
+        currentSchedule.setOnClickListener(view -> timetableManager.openFile());
+
+        TextView newSchedule = view.findViewById(R.id.newScheduleTextView);
+        newSchedule.setVisibility(View.GONE);
+        newSchedule.setOnClickListener(view -> timetableManager.downloadFile());
     }
 
     private void updateSchedule() {

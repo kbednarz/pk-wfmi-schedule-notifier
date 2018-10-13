@@ -42,6 +42,19 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
             <TextView
+                android:id="@+id/newScheduleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin_small"
+                android:background="@drawable/pink_rounded_textview"
+                android:padding="@dimen/text_margin"
+                android:text="@string/new_schedule_appeared"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media"
+                android:textColor="#FFF"
+                android:textSize="14sp"
+                android:textAlignment="center"/>
+
+            <TextView
                 android:id="@+id/scheduleFileNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
