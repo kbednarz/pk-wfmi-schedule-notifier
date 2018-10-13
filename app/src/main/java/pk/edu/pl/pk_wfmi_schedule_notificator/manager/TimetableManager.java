@@ -107,7 +107,7 @@ public class TimetableManager {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, "No handler for this type of file.", Toast.LENGTH_LONG).show();
         } catch (SnappydbException e) {
-            e.printStackTrace();
+            Log.e(TAG, "openFile: db error ", e);
         }
     }
 }
