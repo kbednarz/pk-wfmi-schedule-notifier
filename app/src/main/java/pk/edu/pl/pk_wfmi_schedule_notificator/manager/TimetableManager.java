@@ -30,14 +30,15 @@ import static android.content.ContentValues.TAG;
 public class TimetableManager {
     private Storage storage;
     private HtmlParser htmlParser;
-    private final String URL;
     private final Context context;
 
     public TimetableManager(Context context) throws IOException, SnappydbException {
         this.context = context;
         this.storage = new Storage(context);
-        URL = Config.getProperty("schedule.url", context);
-        htmlParser = new HtmlParser(URL);
+
+        String url = Config.getProperty("schedule.url", context);
+        String selector = Config.getProperty("schedule.cssSelector", context);
+        htmlParser = new HtmlParser(url, selector);
     }
 
     public Timetable getLatest() throws SnappydbException {

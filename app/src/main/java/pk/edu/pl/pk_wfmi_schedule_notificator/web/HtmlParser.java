@@ -11,9 +11,11 @@ import pk.edu.pl.pk_wfmi_schedule_notificator.domain.Timetable;
 
 public class HtmlParser {
     private final String pageUrl;
+    private final String cssSelector;
 
-    public HtmlParser(String pageUrl) {
+    public HtmlParser(String pageUrl, String cssSelector) {
         this.pageUrl = pageUrl;
+        this.cssSelector = cssSelector;
     }
 
     /**
@@ -23,7 +25,7 @@ public class HtmlParser {
      */
     private Element findScheduleInDOM(Document doc) throws Exception {
         try {
-            return doc.select("p:contains(STUDIA NIESTACJONARNE)").parents().first().select("li:contains(Informatyka I stopień)").select("a").first();
+            return doc.select(cssSelector).first();
         } catch (NullPointerException e) {
             throw new Exception("XLS file not found in DOM");
         }
