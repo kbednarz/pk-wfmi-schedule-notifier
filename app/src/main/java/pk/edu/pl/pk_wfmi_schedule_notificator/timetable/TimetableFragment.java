@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Objects;
 
@@ -94,13 +93,13 @@ public class TimetableFragment extends Fragment {
 
 
     private void setupScheduleButtons() {
-        view.findViewById(R.id.scheduleFileNameTextView).setVisibility(View.GONE);
+        TextView currentSchedule = view.findViewById(R.id.scheduleFileNameTextView);
+        currentSchedule.setVisibility(View.GONE);
+        currentSchedule.setOnClickListener(view -> timetableManager.openFile());
 
         TextView newSchedule = view.findViewById(R.id.newScheduleTextView);
         newSchedule.setVisibility(View.GONE);
-        newSchedule.setOnClickListener(view -> {
-            timetableManager.downloadFile();
-        });
+        newSchedule.setOnClickListener(view -> timetableManager.downloadFile());
     }
 
     private void updateSchedule() {

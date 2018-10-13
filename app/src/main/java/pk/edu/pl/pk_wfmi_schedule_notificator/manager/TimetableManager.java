@@ -1,15 +1,21 @@
 package pk.edu.pl.pk_wfmi_schedule_notificator.manager;
 
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -78,5 +84,28 @@ public class TimetableManager {
                 Log.e(TAG, "downloadFile: error", e);
             }
         }).start();
+    }
+
+    public void openFile() {
+        try {
+            Timetable latest = getLatest();
+            String fileName = latest.getFileName();
+            MimeTypeMap myMime = MimeTypeMap.getSingleton();
+            Intent newIntent = new Intent(Intent.ACTION_VIEW);
+
+            String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+            String mimeType = myMime.getMimeTypeFromExtension(ext);
+
+            File file = context.getFileStreamPath(latest.getFileName());
+            Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+            newIntent.setDataAndType(uri, mimeType);
+            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            context.startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
     }
 }
