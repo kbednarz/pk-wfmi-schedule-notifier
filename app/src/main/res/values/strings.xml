@@ -14,4 +14,5 @@
     <string name="last_update">Last update:</string>
     <string name="schedule">Latest schedule</string>
     <string name="no_data">NO DATA</string>
+    <string name="new_schedule_appeared">New schedule appeared</string>
 </resources>
