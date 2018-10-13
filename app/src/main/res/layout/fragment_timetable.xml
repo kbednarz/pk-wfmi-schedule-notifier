@@ -52,7 +52,7 @@
                 android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media"
                 android:textColor="#FFF"
                 android:textSize="14sp"
-                android:visibility="visible"/>
+                android:textAlignment="center"/>
 
             <TextView
                 android:id="@+id/scheduleFileNameTextView"
