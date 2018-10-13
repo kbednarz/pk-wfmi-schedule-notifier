@@ -5,7 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
+import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -71,7 +71,9 @@ public class TimetableManager {
                 String header = response.header("Content-Disposition");
                 String filename = header.substring(header.indexOf("filename=\"") + 10, header.length() - 1);
 
-                try (FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)) {
+                File storageDirectory = Environment.getExternalStorageDirectory();
+                File scheduleFile = new File(storageDirectory, filename);
+                try (FileOutputStream outputStream = new FileOutputStream(scheduleFile)) {
                     outputStream.write(response.bodyAsBytes());
                 }
 
@@ -96,8 +98,8 @@ public class TimetableManager {
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
             String mimeType = myMime.getMimeTypeFromExtension(ext);
 
-            File file = context.getFileStreamPath(latest.getFileName());
-            Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+            File file = new File(Environment.getExternalStorageDirectory(), fileName);
+            Uri uri = Uri.fromFile(file);
             newIntent.setDataAndType(uri, mimeType);
             newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
