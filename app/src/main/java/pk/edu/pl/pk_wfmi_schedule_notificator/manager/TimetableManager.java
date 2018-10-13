@@ -19,7 +19,7 @@ public class TimetableManager {
     public TimetableManager(Context context) throws IOException, SnappydbException {
         this.storage = new Storage(context);
 
-        htmlParser = new HtmlParser(Config.getProperty("schedule.url", context), Config.getProperty("schedule.keyword", context));
+        htmlParser = new HtmlParser(Config.getProperty("schedule.url", context));
     }
 
     public Timetable getLatest() throws SnappydbException {
@@ -42,6 +42,6 @@ public class TimetableManager {
     }
 
     private boolean hasChanged(Timetable lastTimetable, Timetable timetableToValidate) {
-        return lastTimetable == null || !timetableToValidate.getFileName().equals(lastTimetable.getFileName());
+        return lastTimetable == null || !timetableToValidate.getUrl().equals(lastTimetable.getUrl());
     }
 }
