@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.snappydb.SnappydbException;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Objects;
 
@@ -40,7 +41,7 @@ public class TimetableFragment extends Fragment {
             timetableManager = new TimetableManager(getActivity());
             mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
             mSwipeRefreshLayout.setOnRefreshListener(this::updateSchedule);
-            hideButtonsOnStart();
+            setupScheduleButtons();
 
             getActivity().registerReceiver(new TimetableEventReceiver(this), new IntentFilter(TimetableEventReceiver.EVENT_FILTER));
 
@@ -92,9 +93,14 @@ public class TimetableFragment extends Fragment {
     }
 
 
-    private void hideButtonsOnStart() {
+    private void setupScheduleButtons() {
         view.findViewById(R.id.scheduleFileNameTextView).setVisibility(View.GONE);
-        view.findViewById(R.id.newScheduleTextView).setVisibility(View.GONE);
+
+        TextView newSchedule = view.findViewById(R.id.newScheduleTextView);
+        newSchedule.setVisibility(View.GONE);
+        newSchedule.setOnClickListener(view -> {
+            timetableManager.downloadFile();
+        });
     }
 
     private void updateSchedule() {
