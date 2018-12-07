@@ -30,19 +30,19 @@ public class TimetableFragment extends Fragment {
     private TimetableManager timetableManager;
     private View view;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private Activity mainActivity;
     private DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             view = inflater.inflate(R.layout.fragment_timetable, container, false);
-            timetableManager = new TimetableManager(getActivity());
+            timetableManager = new TimetableManager(mainActivity);
             mSwipeRefreshLayout = view.findViewById(R.id.fragment_timetable);
             mSwipeRefreshLayout.setOnRefreshListener(this::updateSchedule);
             setupScheduleButtons();
 
-            getActivity().registerReceiver(new TimetableEventReceiver(this), new IntentFilter(TimetableEventReceiver.EVENT_FILTER));
+            mainActivity.registerReceiver(new TimetableEventReceiver(this), new IntentFilter(TimetableEventReceiver.EVENT_FILTER));
 
             updateTimetableView();
             updateSchedule();
@@ -88,7 +88,7 @@ public class TimetableFragment extends Fragment {
     }
 
     void onError(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -104,19 +104,20 @@ public class TimetableFragment extends Fragment {
 
     private void updateSchedule() {
         mSwipeRefreshLayout.setRefreshing(true);
-        UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(timetableManager, getActivity());
+        UpdateFileAsyncTask updateFileAsyncTask = new UpdateFileAsyncTask(timetableManager, mainActivity);
         updateFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void scheduleNextCheck() {
-        AlarmManager alarmManager = new AlarmManager(getActivity());
+        AlarmManager alarmManager = new AlarmManager(mainActivity);
         alarmManager.startBackgroundService();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Objects.requireNonNull(getActivity().getActionBar()).setTitle(R.string.schedules_section);
+        this.mainActivity = activity;
+        Objects.requireNonNull(mainActivity.getActionBar()).setTitle(R.string.schedules_section);
     }
 
 }
