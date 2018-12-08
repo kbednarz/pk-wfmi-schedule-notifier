@@ -15,6 +15,7 @@ import android.util.Log;
 import com.snappydb.SnappydbException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import pk.edu.pl.pk_wfmi_schedule_notificator.R;
 import pk.edu.pl.pk_wfmi_schedule_notificator.activity.MainActivity;
@@ -65,7 +66,8 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
                 new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.notification_small_icon)
                         .setContentTitle("PK WFMI")
-                        .setContentText("New schedule appeared!");
+                        .setContentText("New schedule appeared!")
+                        .setChannelId(CHANNEL_ID);
 
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -79,18 +81,16 @@ public class NotificationAsyncTask extends AsyncTask<Void, Void, Timetable> {
 
         mBuilder.setContentIntent(resultPendingIntent);
 
-        NotificationManager mNotifyMgr =
-                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
-        if (mNotifyMgr != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
-                        "PK Notifier", NotificationManager.IMPORTANCE_HIGH);
-                mNotifyMgr.createNotificationChannel(mChannel);
-            }
-
-            mNotifyMgr.notify(1, mBuilder.build());
+        NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        Objects.requireNonNull(mNotifyMgr);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
+                    "PK Notifier", NotificationManager.IMPORTANCE_HIGH);
+            mNotifyMgr.createNotificationChannel(mChannel);
         }
+
+        mNotifyMgr.notify(1, mBuilder.build());
+
     }
 
 }

@@ -12,6 +12,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.Objects;
+
 import pk.edu.pl.pk_wfmi_schedule_notificator.job.NotificationJob;
 import pk.edu.pl.pk_wfmi_schedule_notificator.task.NotificationAsyncTask;
 
@@ -48,12 +50,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         //builder.setRequiresDeviceIdle(true); // device should be idle
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        Objects.requireNonNull(jobScheduler);
         jobScheduler.schedule(builder.build());
     }
 
     private boolean isOnline(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context
                 .CONNECTIVITY_SERVICE);
+        Objects.requireNonNull(connManager);
         NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
