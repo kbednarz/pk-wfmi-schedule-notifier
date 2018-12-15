@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -100,7 +101,13 @@ public class TimetableManager {
             String mimeType = myMime.getMimeTypeFromExtension(ext);
 
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
-            Uri uri = Uri.fromFile(file);
+            Uri uri;
+            if (Build.VERSION.SDK_INT < 24) {
+                uri = Uri.fromFile(file);
+            } else {
+                uri = Uri.parse(file.getPath()); // workaround for FileUriExposedException
+            }
+
             newIntent.setDataAndType(uri, mimeType);
             newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
